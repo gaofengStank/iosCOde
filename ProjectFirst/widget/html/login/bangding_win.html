@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+ </head>
+<style type="text/css">
+	html,
+	body {
+		height: 100%;
+	}
+
+	body {
+		background: #fff;
+		padding-top: 3.06rem;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.sure {
+		margin-top: 2.13rem;
+	}
+
+	.tiplogin {
+		margin-top: 0.42rem;
+	}
+</style>
+
+<body>
+	<div class="header">
+		<span class="back" onclick="closeWin()"></span>
+	</div>
+	<h5 class="useTitle">注册
+</h5>
+	<div class="writeUl">
+		<h5>手机号</h5>
+		<input type="text" class="w" placeholder="请输入手机号"  id="phone"/>
+		<span class="close"></span>
+	</div>
+	<div class="writeUl">
+		<h5>验证码</h5>
+		<input type="text" class="w" placeholder="请输入验证码" id="code" />
+		<input type="button" class="sendCode" id="btn" value="获取验证码" onclick="settime(this)" />
+	</div>
+	<div class="writeUl">
+		<h5>密码</h5>
+		<input type="password"  id="password" class="w" placeholder="请输入密码" />
+
+	</div>
+
+	<div class="sure" onclick="regiser2()">
+		完成
+	</div>
+	<div class="tiplogin">登录/注册即代表同意<em>《用户协议》</em></div>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+
+	<script type="text/javascript">
+		var countdown = 60;
+
+	 var  openid  = "";
+	 var  nickname= "";
+	 var  sex = "";
+	 var headimgurl = "";
+	 var loginType = "";
+	 apiready  =   function(){
+		 openid  =  api.pageParam.openid ;
+		 nickname  =  api.pageParam.nickname ;
+		 sex  =  api.pageParam.sex ;
+		 headimgurl  =  api.pageParam.headimgurl ;
+		 loginType  =  api.pageParam.loginType ;
+	 }
+
+		function settime(obj) {
+			 var phone =  $api.val($api.byId("phone"));
+
+			if (countdown == 60) {
+				var parame = {
+					values: {
+						phones: phone,
+						flag: "false"
+					}
+				}
+
+				doAjax(sendCode2, "POST",parame,function(data){
+				})
+			}
+			if (countdown == 0) {
+				obj.removeAttribute("disabled");
+				obj.value = "获取验证码";
+				countdown = 60;
+				return;
+			} else {
+				obj.setAttribute("disabled", "disabled");
+				obj.value = "倒计时(" + countdown + ")";
+				countdown--;
+			}
+			setTimeout(function() {
+				settime(obj)
+			}, 1000)
+		}
+
+		function regiser2(){
+			var phone =  $api.val($api.byId("phone")) || "";
+			var code =  $api.val($api.byId("code")) || "";
+			var password =  $api.val($api.byId("password")) || "";
+
+			if (phone == "") {
+				toast("请输入手机号码");
+				return;
+			}
+			if (code == "") {
+				toast("请输入验证码");
+				return;
+			}
+			if (password == "") {
+				toast("请输入密码");
+				return;
+			}
+			var  parame   = {
+				values:{
+					phone: phone,
+					regCode: code,
+					password:  password,
+					openid  :  openid,
+					nickname: nickname,
+					sex: sex,
+					headimgurl: headimgurl,
+					loginType: loginType
+				}
+			}
+
+			doAjax(registerApi2,"POST" ,parame,function(data){
+
+
+					console.log(JSON.stringify(data));
+					var flag = data.flag;
+					if (flag == "false") {
+						toast(data.msg)
+					} else {
+						var token = data.data.rowid;
+						var rezhenstatus = data.data.rezhenstatus;
+						var rezhenstatus = data.data.rezhenstatus;
+						var leval = data.data.leval;
+
+						$api.setStorage('token', token);
+						var rongToken = data.rongToken;
+						$api.setStorage('rongToken', rongToken);
+						if (leval == "2" && rezhenstatus == "2") {
+							openWindow("index", "../bbs/index.html", {})
+							return;
+						} else {
+
+						}
+						api.sendEvent({
+							name: 'login',
+							extra: {
+								key1: 'value1',
+								key2: 'value2'
+							}
+						});
+
+						 api.closeToWin({
+						     name: 'root'
+						 });
+
+					}
+			})
+		}
+	</script>
+
+</html>

@@ -1,0 +1,83 @@
+[{
+    "name":"aMap",
+    "class":"GDMap",
+    "methods":["open","takeSnapshotInRect","close","show","hide","setRect","getLocation","stopLocation","getCoordsFromName","getNameFromCoords","getDistance","showUserLocation","setTrackingMode","setCenter","getCenter","setZoomLevel","getZoomLevel","setMapAttr","setRotation","getRotation","setOverlook","getOverlook","setRegion","getRegion","setScaleBar","setCompass","setLogo","isPolygonContainsPoint","interconvertCoords","addEventListener","removeEventListener","addAnnotations","getAnnotationCoords","setAnnotationCoords","annotationExist","setBubble","popupBubble","closeBubble","addBillboard","addMobileAnnotations","moveAnnotation","removeAnnotations","addLine","addArc","addPolygon","addCircle","addImg","addLocus","removeOverlay","searchRoute","drawRoute","removeRoute","searchBusRoute","drawBusRoute","removeBusRoute","autocomplete","searchInCity","searchNearby","searchInPolygon","getProvinces","getMunicipalities","getNationWide","getAllCities","getVersion","downloadRegion","isDownloading","pauseDownload","cancelAllDownload","clearDisk","checkNewestVersion","reloadMap","setWebBubble","districtSearch","isShowsIndoorMap","showsIndoorMap","isShowsIndoorMapControl","showsIndoorMapControl","indoorMapControlSize","setIndoorMapControlOrigin","setCurrentIndoorMapFloorIndex","clearIndoorMapCache","addWebBubbleListener","removeWebBubbleListener","addHeatMap","refreshHeatMap","addMultiPoint","addMoveAnimation","cancelMoveAnimation","convertCoordinate","processedTrace","cancelProcessedTrace","getCitiesByProvince","isCircleContainsPoint","cancelAnnotationSelected"]
+}
+
+
+, {
+	 "name":"clipBoard",
+	 "class":"UZClipBoard",
+	 "methods":["set","get","setListener","removeListener"]
+ }
+,{
+    "name":"db",
+    "class":"UZDatabase",
+    "methods":["openDatabase","closeDatabase","transaction","executeSql","selectSql"],
+    "syncMethods":["openDatabaseSync","closeDatabaseSync","transactionSync","executeSqlSync","selectSqlSync"]
+}
+, {
+     "name":"FNImageClip",
+     "class":"UZFNImageClip",
+     "methods":["open","save","reset","close"]
+ }
+,{
+	 "name":"FNScanner",
+	 "class":"UZFNScanner",
+	 "methods":["open","openScanner","openView","closeView","decodeImg","encodeImg","switchLight","setFrame","onPause","onResume"]
+ }
+,{
+    "name":"mam",
+    "class":"UZMAM",
+    "launchClassMethod":"launch"
+}
+,{
+"name":"NVTabBarAnimation",
+"class":"NVTabBarAnimation",
+"methods":["open","close","show","hide","setBadge","setItemAttr","bringToFront"]
+}
+,{
+     "name":"qiniuStorage",
+     "class":"QNUploader",
+     "methods":["configUploader","start","cancel","addEventListener"],
+ }
+,{
+     "name":"signature",
+     "class":"UZSignature",
+     "methods":["aesFile","sha256","md5","sha1","aes","aesCBC","aesECB","aesDecodeCBC","aesECBAsymmetric","aesDecode","aesDecodeECB","base64","base64Decode","rsa","rsaDecode","desECB","desDecodeECB","hmacSha1"],
+     "syncMethods":["aesFileSync","sha256Sync","md5Sync","sha1Sync","aesSync","aesCBCSync","aesDecodeCBCSync","aesECBSync","aesDecodeSync","aesDecodeECBSync","base64Sync","base64DecodeSync","rsaSync","rsaDecodeSync","aesECBAsymmetricSync","desECBSync","desDecodeECBSync","hmacSha1Sync"]
+ }
+,{
+	 "name":"touchID",
+	 "class":"UZTouchID",
+	 "methods":["verify","isValid"]
+ }
+, {
+     "name":"UIActionSelector",
+     "class":"UIActionSelector",
+     "methods":["open","close","hide","show","setActive","getActive"]
+ }
+,
+{
+ "name":"UIChatTools",
+ "class":"UZUIChatTools",
+ "methods":["open","clearText","setAppendButton","faceListener","addFace","imageListener","toolsListener","recorderListener","startTimer","close","show","hide","popupKeyboard","closeKeyboard","popupBoard","closeBoard","value","insertValue","chatBoxListener","setPlaceholder"]
+ }
+,{
+    "name":"UIPhotoViewer",
+    "class":"UZUIPhotoViewer",
+    "methods":["open","close","show","hide","getIndex","setIndex","getImage","setImage","appendImage","deleteImage","clearCache"]
+}
+,
+{
+    "name":"UIScrollPicture",
+    "class":"UZUIScrollPicture",
+    "methods":["open","close","setCurrentIndex","hide","show","reloadData","addEventListener","clearCache"]
+}
+,{
+     "name":"wxPayPlus",
+     "class":"UZWxPay",
+     "methods":["getToken","getOrderId","payOrder","config","pay"],
+     "launchClassMethod":"didFinishLaunchingWxPay"
+}
+]

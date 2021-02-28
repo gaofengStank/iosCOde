@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+	body {
+		background: #F5F5F5;
+	}
+
+	.dis {
+		display: none !important;
+	}
+</style>
+
+<body>
+
+	<script type="text/x-dot-template" id="data-address">
+		<div class="st"   rowid="{{=it.id}}">
+			<span class="name" id="names" v="{{=it.names}}">{{=it.names}}</span>
+			<span class="phone" id="phone" v="{{=it.phone}}">{{=it.phone}}</span>
+		</div>
+		<p class="mz">
+			<span id="addressDetails" v="{{=it.address}}" v1="{{=it.details}}">{{?it.isdefau==2}}【默认】{{?}}</span> {{=it.address}} {{=it.details}}
+		</p>
+	</script>
+
+	<script type="text/x-dot-template" id="data-order">
+		<li><span class="fl">订单号</span><span class="money" id="orderId">{{=it.orderids}}</span></li>
+		<li class="red"><span class="fl">商品合计</span><span class="money" id="moneys">{{=it.ordermoney}}元</span></li>
+		<li class="arrow" onclick="beizhu()"><span class="fl" id="note">买家留言:</span></li>
+	</script>
+
+	<script type="text/x-dot-template" id="data-orderList">
+
+		{{for(var i in it){}}
+		<div class="orderList">
+			<img src="{{=it[i].shopGoods.imgsrc}}" />
+			<h5>{{=it[i].shopGoods.name}}
+							</h5>
+			<div class="attribute">{{=it[i].shopGoods.shopBusiness.name}}
+			</div>
+			<span class="price">￥:{{=it[i].pirce}}</span>
+			<span class="num">x{{=it[i].nums}} </span>
+		</div>
+		{{}}}
+
+	</script>
+	<div class="defaultAddress" id="address">
+
+	</div>
+
+	<div id="orderList">
+
+	</div>
+	<ul class="cost" id="order">
+	</ul>
+	<ul class="pay">
+		<li class="fl">应付<span id="ordermoneyV"></span></li>
+		<li class="fr" onclick="tij()">去付款</li>
+	</ul>
+	<!--备注弹窗-->
+	<div class="remarks dis" id="remarks" cl1ass="">
+		<div class="center">
+			<h5 class="tit">备注内容</h5>
+			<div class="textarea">
+				<textarea id="textarea" onkeyup="wordStatic(this);" maxlength="140" placeholder="请在此输入备注内容"></textarea>
+				<div class="textarea-counter"><span id="num">0</span>/140</div>
+			</div>
+			<div class="btn" onclick="qued()">确定</div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+<script type="text/javascript">
+	function wordStatic(input) {
+		var content = document.getElementById('num');
+		if(content && input) {
+			var value = input.value;
+			value = value.replace(/\n|\r/gi, "");
+			content.innerText = value.length;
+		}
+	}
+	function beizhu() {
+		$api.removeCls(remarks, "dis")
+	}
+	function tij(){
+		 var  names =     $api.attr($api.byId("names"), 'v') || "";
+		 var  phone =     $api.attr($api.byId("phone"), 'v');
+		 var  addresstext =     $api.attr($api.byId("addressDetails"), 'v') +  $api.attr($api.byId("addressDetails"), 'v1');
+		//  var  names =     $api.val($api.byId("names"), 'v');
+			if(names  == ""){
+				toast("请选择地址");
+				return ;
+			}
+var note=	$api.attr(note, "realValue") || "" ;
+			var parame = {
+				values:{
+							names:names,
+							phones: phone,
+							addresstext: addresstext,
+							note: note,
+							rowid : rowid
+				}
+			}
+			doAjax(updateOrders,"POST",parame,function(data){
+						var parame = {
+							rowid : rowid
+						}
+						openWindow("pay_win","pay_win.html",parame);
+			})
+
+	}
+	function qued(){
+			var  textarea  = $api.val($api.byId("textarea")) || "";
+			if(textarea == ""){
+				toast("请输入备注内容");
+				return ;
+			}
+			$api.html(note, "买家留言:"+textarea);
+			$api.attr(note, "realValue",textarea);
+
+			$api.addCls(remarks, "dis");
+ 	}
+
+	var rowid = "";
+	apiready = function() {
+		rowid = api.pageParam.rowid || "60912b66-6e46-45d5-b3db-c48cc88dcaf5";
+		// alert(rowid)
+		initData();
+		// initData2();
+	}
+
+	function initData() {
+		var parame = {
+			values: {
+				rowid: rowid
+			}
+		}
+		doAjax(orderDetails, "POST", parame, function(data) {
+			var order = data.shopOrder;
+			var orderList = data.tabOrderLists;
+
+			var dataTpl = doT.template(document.getElementById("data-orderList").innerHTML);
+			$api.html($api.byId("orderList"), dataTpl(orderList));
+
+			var dataTpl = doT.template(document.getElementById("data-order").innerHTML);
+			$api.html($api.byId("order"), dataTpl(order));
+			var ordermoney =  order.ordermoney;
+			$api.html(ordermoneyV, ordermoney);
+
+			initData2();
+
+		})
+	}
+
+	function initData2() {
+		//
+		var parame = {}
+		doAjax(listMyAddress, "post", parame, function(data) {
+			// if()
+			var data = data.data;
+			if (data.length == 0) {
+				api.alert({
+					title: '提示',
+					msg: '当前没有收货地址,点击确定添加地址.',
+				}, function(ret, err) {
+					if (ret) {
+						openWindow("addressAdd_win", "addressAdd_win.html")
+					} else {}
+				});
+
+			}else {
+				var dataTpl = doT.template(document.getElementById("data-address").innerHTML);
+				$api.html($api.byId("address"), dataTpl(data[0]));
+			}
+		})
+
+	}
+	function  showDetail(v){
+		//
+		var parame= {
+			values:{
+				rowid :v
+			}
+		}
+		doAjax(listMyAddressDetail,"POST",parame,function(data){
+			var address =  data.data;
+
+						var dataTpl = doT.template(document.getElementById("data-address").innerHTML);
+						$api.html($api.byId("address"), dataTpl(address));
+		})
+	}
+
+
+</script>
+
+</html>

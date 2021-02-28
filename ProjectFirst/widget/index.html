@@ -1,0 +1,430 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>零距离</title>
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+
+    <style type="text/css">
+        .dis {
+            display: none;
+        }
+
+        .shield {
+          font-size: 0.63rem;
+        }
+    </style>
+</head>
+
+<body class="wrap">
+    <div cla1ss="header" id="header1">
+    </div>
+    <div class="header dis" id="header2">
+        <span class="tt">购物车</span>
+        <span class="shield"  onclick="editGwc(this)">编辑</span>
+    </div>
+    <div class="header dis" id="header3">
+         <ul class="switchUl two">
+            <li class="cur">私聊<em></em></li>
+            <li>通知<em></em></li>
+        </ul>
+        <span class="search"></span>
+    </div>
+    <div class="header dis" id="header4">
+          <span class="tt">关注</span>
+         </div>
+         <div class="header dis" id="header5">
+              </div>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/app.js"></script>
+
+<script type="text/javascript">
+    var NVTabBarAnimation;
+    apiready = function() {
+        checkLogin(function() {}, function() {
+            //  openWindow("login","html/login/pwLogin.html")
+        })
+
+        NVTabBarAnimation = api.require("NVTabBarAnimation");
+        api.removeLaunchView({
+            animation: {
+                type: 'fade',
+                duration: 0
+            }
+        });
+
+
+        api.setKeepScreenOn({
+            keepOn: true
+        });
+        var hh = $api.offset($api.byId("header1")).h;
+        // alert(hh)
+        api.openFrameGroup({
+            name: 'group',
+            scrollEnabled: false,
+            rect: {
+                x: 0,
+                y: hh,
+                w: 'auto',
+                marginBottom: 50
+            },
+            index: 0,
+            preload: 0,
+            frames: [{
+                name: 'main',
+                allowEdit: true, //（可选项）是否允许长按页面时弹出选择菜单
+                url: "html/frame/main.html"
+            }, {
+                name: 'gwc',
+                allowEdit: true, //（可选项）是否允许长按页面时弹出选择菜单
+                url: "html/frame/gwc.html"
+            }, {
+                name: 'msg',
+                allowEdit: true, //（可选项）是否允许长按页面时弹出选择菜单
+                url: "html/frame/msg.html"
+            }, {
+                name: 'guanzhu',
+                allowEdit: true, //（可选项）是否允许长按页面时弹出选择菜单
+                url: "html/frame/guanzhu.html"
+            }, {
+                name: 'my',
+                allowEdit: true, //（可选项）是否允许长按页面时弹出选择菜单
+                url: "html/frame/my.html"
+            }]
+        }, function(ret, err) {
+
+        });
+        NVTabBarAnimation.open({
+            styles: {
+                bg: '#fff',
+                h: 48,
+                dividingLine: {
+                    width: 0.5,
+                    color: '#ccc'
+                },
+                badge: {
+                    bgColor: '#f45815',
+                    numColor: '#fff',
+                    size: 7.0
+                }
+            },
+            items: [{
+                w: api.winWidth / 5.0,
+                bg: {
+                    marginB: 0,
+                    image: 'rgba(0,0,0,0)',
+                },
+                icon: {
+                    normal: 'widget://image/home.png',
+                    highlight: 'widget://image/home_1.png',
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0,
+                    },
+                },
+                animationIcons: {
+                    paths: ['widget://res/NVTabBarAnimation/1.png', 'widget://res/NVTabBarAnimation/2.png', 'widget://res/NVTabBarAnimation/3.png'],
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0
+                    },
+                    interval: 300
+                },
+                title: {
+                    text: '首页',
+                    size: 12.0,
+                    normal: '#696969',
+                    selected: '#FF0000',
+                    marginB: 6.0,
+                    ttf: 'Alkatip Basma Tom'
+
+                },
+                rect: {
+                    w: api.winWidth / 5.0,
+                    x: 0,
+                    y: 0,
+                },
+            }, {
+                w: api.winWidth / 5.0,
+                bg: {
+                    marginB: 0,
+                    image: 'rgba(0,0,0,0)',
+                },
+                icon: {
+                    normal: 'widget://image/gwc.png',
+                    highlight: 'widget://image/gwc_1.png',
+                    rect: {
+                        w: 20.0,
+                        h: 20.0,
+                        x: 0,
+                        y: 0,
+                    },
+                },
+                animationIcons: {
+                    paths: ['widget://res/NVTabBarAnimation/1.png', 'widget://res/NVTabBarAnimation/2.png', 'widget://res/NVTabBarAnimation/3.png'],
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0
+                    },
+                    interval: 300
+                },
+                title: {
+                    text: '购物车',
+                    size: 10,
+                    normal: '#696969',
+                    selected: '#FF0000',
+                    marginB: 6.0,
+                    ttf: 'Alkatip Basma Tom'
+
+                },
+                rect: {
+                    w: api.winWidth / 5.0,
+                    x: 0,
+                    y: 0,
+                },
+            }, {
+                w: api.winWidth / 5.0,
+                bg: {
+                    marginB: 0,
+                    image: 'rgba(0,0,0,0)',
+                },
+                icon: {
+                    normal: 'widget://image/msg.png',
+                    selected: 'widget://image/msg_1.png',
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0,
+                    },
+                },
+                animationIcons: {
+                    paths: ['widget://res/NVTabBarAnimation/1.png', 'widget://res/NVTabBarAnimation/2.png', 'widget://res/NVTabBarAnimation/3.png'],
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0
+                    },
+                    interval: 300
+                },
+                title: {
+                    text: '消息',
+                    size: 12.0,
+                    normal: '#696969',
+                    selected: '#FF0000',
+                    marginB: 6.0,
+                    ttf: 'Alkatip Basma Tom'
+
+                },
+                rect: {
+                    w: api.winWidth / 5.0,
+                    x: 0,
+                    y: 0,
+                },
+            }, {
+                w: api.winWidth / 5.0,
+                bg: {
+                    marginB: 0,
+                    image: 'rgba(0,0,0,0)',
+                },
+                icon: {
+                    normal: 'widget://image/gz.png',
+                    selected: 'widget://image/gz_1.png',
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0,
+                    },
+                },
+                animationIcons: {
+                    paths: ['widget://res/NVTabBarAnimation/1.png', 'widget://res/NVTabBarAnimation/2.png', 'widget://res/NVTabBarAnimation/3.png'],
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0
+                    },
+                    interval: 300
+                },
+                title: {
+                    text: '关注',
+                    size: 12.0,
+                    normal: '#696969',
+                    selected: '#FF0000',
+                    marginB: 6.0,
+                    ttf: 'Alkatip Basma Tom'
+
+                },
+                rect: {
+                    w: api.winWidth / 5.0,
+                    x: 0,
+                    y: 0,
+                },
+            }, {
+                w: api.winWidth / 5.0,
+                bg: {
+                    marginB: 0,
+                    image: 'rgba(0,0,0,0)',
+                },
+                icon: {
+                    normal: 'widget://image/my.png',
+                    selected: 'widget://image/my_1.png',
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0,
+                    },
+                },
+                animationIcons: {
+                    paths: ['widget://res/NVTabBarAnimation/1.png', 'widget://res/NVTabBarAnimation/2.png', 'widget://res/NVTabBarAnimation/3.png'],
+                    rect: {
+                        w: 25.0,
+                        h: 25.0,
+                        x: 0,
+                        y: 0
+                    },
+                    interval: 300
+                },
+                title: {
+                    text: '我的',
+                    size: 12.0,
+                    normal: '#696969',
+                    selected: '#FF0000',
+                    marginB: 6.0,
+                    ttf: 'Alkatip Basma Tom'
+
+                },
+                rect: {
+                    w: api.winWidth / 5.0,
+                    x: 0,
+                    y: 0,
+                },
+            }],
+            selectedIndex: 0
+        }, function(ret, err) {
+            if (ret && ret.eventType == "click") {
+                // alert(ret.index);
+                // api.setFrameGroupIndex({
+                //     name: 'group',
+                //     index: ret.index,
+                //     scroll: true
+                // });
+                var index = ret.index;
+                index= index+1;
+                // alert(index)
+
+                if (index != 1) {
+
+
+                    checkLogin(function() {
+
+                        hideAllHeader();
+                        $api.toggleCls($api.byId("header" + index), 'dis');
+
+                             var hh = $api.offset($api.byId("header" + index)).h;
+                             if(index == 5){
+                               hh=0;
+                             }
+                              api.setFrameGroupAttr({
+                                  name: 'group',
+                                  rect: {
+                                      x: 0,
+                                      y: hh,
+                                      w: 'auto',
+                                      marginBottom: 50
+                                  },
+                              });
+                        api.setFrameGroupIndex({
+                            name: 'group',
+                            index: ret.index,
+                            scroll: true
+                        });
+                        setTimeout(function(){
+                          api.setFrameGroupIndex({
+                              name: 'group',
+                              index: ret.index,
+                              scroll: true
+                          });
+                        },300)
+                        console.log(index);
+
+
+
+                    }, function() {
+                        openWindow("pwLogin", "html/login/pwLogin.html")
+                    })
+                } else {
+                    hideAllHeader();
+                    $api.toggleCls($api.byId("header" + index), 'dis');
+
+                         var hh = $api.offset($api.byId("header" + index)).h;
+                         if(index == 5){
+                           hh=0;
+                         }
+                          api.setFrameGroupAttr({
+                              name: 'group',
+                              rect: {
+                                  x: 0,
+                                  y: hh,
+                                  w: 'auto',
+                                  marginBottom: 50
+                              },
+                          });
+                    api.setFrameGroupIndex({
+                        name: 'group',
+                        index: ret.index,
+                        scroll: true
+                    });
+                    setTimeout(function(){
+                      api.setFrameGroupIndex({
+                          name: 'group',
+                          index: ret.index,
+                          scroll: true
+                      });
+                    },300)
+                }
+
+            }
+        });
+    };
+
+    function hideAllHeader() {
+        $api.addCls(header1, 'dis');
+        $api.addCls(header2, 'dis');
+        $api.addCls(header3, 'dis');
+        $api.addCls(header4, 'dis');
+        $api.addCls(header5, 'dis');
+
+    }
+    function  editGwc(el){
+        var  html =   $api.html(el);
+
+        if(html == "编辑"){
+           $api.html(el,"保存");
+        }else {
+          $api.html(el,"编辑");
+        }
+
+      api.execScript({
+          name: 'root',
+          frameName: 'gwc',
+          script: 'editGwc();'
+      });
+
+    }
+</script>
+
+</html>

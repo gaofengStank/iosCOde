@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>AUI快速完成布局</title>
+    <link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+    <style type="text/css">
+        .text-light {
+            color: #999999 !important;
+        }
+
+        * {
+            padding: 0px;
+            margin: 0px;
+            list-style: none;
+            font-style: normal;
+            font-family: arial;
+            font-family: Microsoft YaHei, arial;
+        }
+
+        .twoRankedBox {
+            margin: 6px 8px;
+            overflow: hidden;
+            padding-bottom: 25px;
+        }
+
+        .twoRankedBox ul {
+            width: 49%;
+            float: left;
+        }
+
+        .twoRankedBox ul:last-child {
+            margin-left: 2%;
+        }
+
+        .twoRankedBox ul li {
+            padding: 5px;
+            margin-bottom: 6px;
+            padding-bottom: 8px;
+            background-color: #FFFFFF;
+        }
+
+        .twoRankedBox ul li p:first-child {
+            padding-top: 0px;
+        }
+
+        .twoRankedBox ul li p {
+            padding-top: 4px;
+        }
+
+        .product_picture img {
+            display: block;
+            width: 100%;
+        }
+
+        .product_np {
+            overflow: hidden;
+            line-height: 20px;
+        }
+
+        .product_np a {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .product_np a:first-child {
+            font-size: 0.9em;
+            color: #58b7e3;
+            width: 65%;
+            float: left;
+        }
+
+        .product_np a:last-child {
+            font-size: 0.8em;
+            color: #f00;
+            float: right;
+            width: 35%;
+            text-align: right;
+        }
+
+        .product_ie {
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f3f3f3;">
+    <!-- 商品列表 -->
+    <div class="twoRankedBox">
+        <ul class="BoxLeft" id="BoxLeft">
+
+        </ul>
+
+        <ul class="BoxRight" id="BoxRight">
+
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+
+<script type="text/javascript">
+    var name = "";
+    var pageNo = 1;
+    var pageSize = 20;
+    apiready = function() {
+        name = api.pageParam.name;
+        initData();
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function(ret, err) {
+            toast("正在加载数据")
+            pageNo++;
+            initData();
+        });
+    }
+
+    function initData() {
+        var parame = {
+            values: {
+                adminTag: name,
+                pageNo: pageNo,
+                pageSize: pageSize
+            }
+        }
+        doAjax(homeDataDetail, "POST", parame, function(data) {
+            var leftData = "";
+            var rightData = "";
+            var data = data.data;
+            for (var i = 0; i < data.length; i++) {
+                chtml = '<li><p class="product_picture"><img src="' + data[i].picUrl + '"></p>' +
+                    '<p class="product_ie">' + data[i].remarks + '</p></li>'
+                var hh = $api.offset(BoxLeft).h;
+                var hh2 = $api.offset(BoxRight).h;
+                if (hh < hh2) {
+                    // $('.BoxLeft').append(
+                    $api.append(BoxLeft, chtml);
+                } else {
+                    $api.append(BoxRight, chtml);
+
+                }
+            }
+
+        })
+    }
+</script>
+
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+	body {
+		background: #F5F5F5;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.goodsList .searchBar {
+		height: 1.67rem;
+	}
+
+	.goodsList .searchBar li {
+		height: 1.67rem;
+		line-height: 1.67rem;
+	}
+
+	.detail_good {}
+
+	.chartList {
+		border-top: 1px solid rgb(230, 230, 230);
+	}
+</style>
+
+<body>
+	<div class="chartList" id="list">
+	</div>
+
+	<script type="text/x-dot-template" id="data-list">
+		{{for(var i in it){}}
+		<div class="each" >
+			<div class="img" onclick="sjxq(this)" rowid="{{=it[i].shopBusiness.rowid}}">
+				<img src="{{=it[i].shopBusiness.picurl}}" />
+			</div>
+			<div class="text" onclick="sjxq(this)" rowid="{{=it[i].shopBusiness.rowid}}">
+				<h5>{{=it[i].shopBusiness.name}} </h5>
+			</div>
+			<div class="delete" onclick="del(this)"  rowid="{{=it[i].shopBusiness.rowid}}">
+				删除
+			</div>
+		</div>
+		{{}}}
+		</script>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+<script>
+	function del(el) {
+				api.confirm({
+				    title: '提示',
+				    msg: '确定取消关注吗?',
+				    buttons: ['确定', '取消']
+				}, function(ret, err){
+				    if( ret.buttonIndex ==1 ){
+				        //  alert( JSON.stringify( ret ) );
+								var rowid =   $api.attr(el, 'rowid');
+								var parame ={
+									values:{
+										rowid : rowid
+									}
+								}
+								doAjax(collectBusiness,"post",parame,function(data){
+									initData();
+								})
+
+				    }else{
+				        //  alert( JSON.stringify( err ) );
+				    }
+				});
+
+	}
+	apiready =  function(){
+		initData();
+		api.addEventListener({
+		    name: 'guanzhuListener'
+		}, function(ret, err){
+		    if( ret ){
+						initData();
+ 		    }else{
+ 		    }
+		});
+
+	}
+	function initData(){
+		var parame ={}
+		doAjax(listBusinessCollect,"post",parame,function(data){
+			var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+			$api.html($api.byId("list"), dataTpl(data.data));
+		})
+	}
+	function  sjxq(el){
+		var rowid = $api.attr(el, 'rowid');
+		var parame = {
+			rowid: rowid
+		}
+		openWindow("dpDetail_win" + rowid, "../index/dpDetail_win.html", parame);
+
+	}
+</script>
+
+</html>

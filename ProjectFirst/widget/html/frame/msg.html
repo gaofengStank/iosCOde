@@ -1,0 +1,116 @@
+
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+
+		.goodsList .searchBar {
+			height: 1.67rem;
+		}
+
+		.goodsList .searchBar li {
+			height: 1.67rem;
+			line-height: 1.67rem;
+		}
+
+		.detail_good {
+			margin-top: 0.42rem;
+		}
+
+		.chartList {
+			border-top: 1px solid rgb(230, 230, 230);
+		}
+    .dis{
+      display: none  !important;
+    }
+	</style>
+
+	<body>
+
+		<div class="chartList" id="sl2">
+			<div class="each" onclick="xq1()">
+				<div class="img">
+					<img src="../../image/ava1.png" />
+				</div>
+				<div class="text">
+					<h5>达尔文专卖店 <span class="time">昨天</span></h5>
+					<h4>那个车低于3000卖不卖？</h4>
+				</div>
+				<div class="delete">
+					删除
+				</div>
+			</div>
+      <div class="each" onclick="xq1()">
+				<div class="img">
+					<img src="../../image/ava1.png" />
+				</div>
+				<div class="text">
+					<h5>达尔文专卖店 <span class="time">9:22</span></h5>
+					<h4 class="circle">那个车低于3000卖不卖？</h4>
+				</div>
+				<div class="delete">
+					删除
+				</div>
+			</div>
+		</div>
+
+      <div id="tz2" class="dis">
+        <div    class="notice last" onclick="xq2()">
+          <h5>系统消息<span>12-26 13:21</span></h5>
+          <p>
+            两行内容显示，显示两行标题不能超过两行，超过...
+          </p>
+          <div class="look_detail">
+            查看详情
+          </div>
+        </div>
+        <div class="notice"   onclick="xq2()">
+          <h5>系统消息<span>12-26 13:21</span></h5>
+          <p>
+            两行内容显示，显示两行标题不能超过两行，超过...
+          </p>
+          <div class="look_detail">
+            查看详情
+          </div>
+        </div>
+      </div>
+
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/app.js"></script>
+    <script>
+      function change(el){
+          $api.removeCls($api.dom(".cur"), 'cur');
+          $api.addCls(el, 'cur');
+$api.addCls($api.byId("tz2"), 'dis');
+$api.addCls($api.byId("sl2"), 'dis');
+ var   tar =   $api.attr(el, 'tag');
+$api.removeCls($api.byId(tar), 'dis');
+
+      }
+      function  xq1(){
+        openWindow("xq1_win","../msg/xq1_win.html")
+      }
+      function  xq2(){
+        openWindow("xq2_win","../msg/xq2_win.html")
+
+
+      }
+    </script>
+</html>

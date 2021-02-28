@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>驹易购</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+    body {
+        background: #F5F5F5;
+    }
+
+    header {
+        border-bottom: 1px solid;
+    }
+
+    .address_relative li .w {
+        text-align: left;
+    }
+</style>
+
+<body>
+    <ul class="address_relative">
+        <li>
+            <span class="fl">姓名</span>
+            <input type="text" class="w" id="name" placeholder="请输入收货人姓名" />
+        </li>
+        <li>
+            <span class="fl">电话</span>
+            <input type="tel" class="w" id="phone" placeholder="请输入收货人电话" />
+        </li>
+        <li class="arrow">
+            <span class="fl">所在地</span>
+            <input type="text" class="w" id="address" onclick="openAdd()" placeholder="请选择所在地区" readonly="readonly" />
+        </li>
+        <li class="ch">
+            <span class="fl">详细地址</span>
+            <input type="text" class="w" id="detail" placeholder="请输入地址" />
+        </li>
+    </ul>
+
+    <div class="sure" onclick="saveAdd()">
+			确定
+		</div>
+    <script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../script/app.js"></script>
+    <script>
+       var UIActionSelector;
+       var  provice;
+       var city;
+       var area="";
+        apiready = function() {
+                UIActionSelector=   api.require("UIActionSelector");
+        }
+        function  openAdd(){
+          UIActionSelector.open({
+              datas: 'widget://res/city.json',
+              layout: {
+                  row: 5,
+                  col: 3,
+                  height: 30,
+                  size: 12,
+                  sizeActive: 14,
+                  rowSpacing: 5,
+                  colSpacing: 10,
+                  maskBg: 'rgba(0,0,0,0.2)',
+                  bg: '#fff',
+                  color: '#888',
+                  colorActive: '#f00',
+                  colorSelected: '#f00'
+              },
+              animation: true,
+              cancel: {
+                  text: '取消',
+                  size: 14,
+                  w: 90,
+                  h: 35,
+                  bg: 'none',
+
+                  bgActive: '#ccc',
+                  color: '#888',
+                  colorActive: '#fff'
+              },
+              ok: {
+                  text: '确定',
+                  size: 14,
+                  w: 90,
+                  h: 35,
+                  bg: 'none',
+                  bgActive: '#ccc',
+                  color: '#005bea',
+                  colorActive: '#fff'
+              },
+              title: {
+                  text: '请选择',
+                  size: 12,
+                  h: 44,
+                  bg: '#eee',
+                  color: '#888'
+              },
+              fixedOn: api.frameName
+          }, function(ret, err) {
+              if (ret) {
+                  // alert(JSON.stringify(ret));
+                  console.log(JSON.stringify(ret));
+                  if (ret.eventType == "ok") {
+                      if (ret.level2 == "市辖区" || ret.level2 == "县") {
+                        provice =  ret.level1;
+                          city  = ret.level2
+                          area="";
+                          $api.byId("address").value = ret.level1 + " " + ret.level3;
+                      } else {
+                        provice =  ret.level1;
+                          city  = ret.level2;
+                          area=ret.level3;
+                          $api.byId("address").value = ret.level1 + " " + ret.level2 + " " + ret.level3;
+
+
+                      }
+                  }
+
+              } else {
+                  // alert(JSON.stringify(err));
+              }
+          });
+        }
+
+        function  saveAdd(){
+            var nameValue=   $api.val($api.byId("name")) ||  "";
+            var phoneValue=   $api.val($api.byId("phone")) || "";
+            var addressValue=   $api.val($api.byId("address")) || "";
+            var detailValue=   $api.val($api.byId("detail")) || "";
+
+            if(nameValue ==""){
+              toast("请输入收货人姓名");
+              return;
+            }
+
+            if(phoneValue ==""){
+              toast("请输入收货人电话");
+              return;
+            }
+            if(addressValue ==""){
+              toast("请选择地址");
+              return;
+            }
+            if(detailValue ==""){
+              toast("请输入详细地址");
+              return;
+            }
+
+              var parame = {
+                values:{
+                  names: nameValue,
+                  phone:phoneValue,
+                  address:addressValue,
+                  details:detailValue,
+                  provice :  provice,
+                  city:city,
+                  area : area
+                }
+              }
+
+              doAjax(saveMyAddressDetail,"POST",parame,function(data){
+                var  data =  data.data ;
+                var  rowid  =  data.id  ;
+                api.execScript({
+                    name: 'tjdd_win',
+                    frameName: 'tjdd_frm',
+                    script: 'showDetail("'+rowid+'");'
+                });
+  closeWin();
+              })
+
+
+        }
+    </script>
+
+</html>

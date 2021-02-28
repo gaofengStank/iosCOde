@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+
+</head>
+<style type="text/css">
+	body {
+		background: #F5F5F5;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.header .tt {
+		font-weight: normal;
+		color: #333333;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 7.8rem;
+		margin: 0 auto;
+	}
+
+	.dis {
+		display: none;
+	}
+</style>
+
+<body class="body-ll">
+	<div id="list"></div>
+	<script type="text/x-dot-template" id="data-list">
+		{{for(var i in it){}}
+		<div class="buyCar">
+			<div class="top">
+				<span onclick="selBus(this)" class="check buss" bussId="{{=it[i][0].shopGoods.shopBusiness.rowid}}"></span>
+				<img src="{{=it[i][0].shopGoods.shopBusiness.picurl}}" />
+				<span class="name">{{=it[i][0].shopGoods.shopBusiness.name}}</span>
+				<span class="location">{{=it[i][0].shopGoods.shopBusiness.address || '暂无地址'}}</span>
+			</div>
+			{{for(var j in it[i]){}}
+
+			<div class="middle">
+				{{?it[i][j].ischeck=="2"}}
+				<span pm="{{=it[i][j].shopGoods.price1}}" num="{{=it[i][j].nums}}" class="check product clicked" bussRowid="{{=it[i][j].shopGoods.shopBusiness.rowid}}" ischeck="1" rowid="{{=it[i][j].rowid}}" onclick="checkData(this)"></span>
+				{{?}}
+				{{?it[i][j].ischeck=="1"}}
+				<span pm="{{=it[i][j].shopGoods.price1}}" num="{{=it[i][j].nums}}" class="check product" ischeck="2" bussRowid="{{=it[i][j].shopGoods.shopBusiness.rowid}}"  rowid="{{=it[i][j].rowid}}" onclick="checkData(this)"></span>
+				{{?}}
+				<div class="img">
+					<img src="{{=it[i][j].shopGoods.imgsrc}}" />
+					<!--<span>无库存</span> -->
+				</div>
+				<h5>
+						 {{=it[i][j].shopGoods.name}}
+					</h5>
+				<h4 class="style">{{=it[i][j].shopGoods.fenlei}}</h4>
+				<span class="price">{{=it[i][j].shopGoods.price1}} 元</span>
+				<div class="numControl">
+					<span class="reduce" rowid="{{=it[i][j].rowid}}" value="{{=it[i][j].nums}}" onclick='reduceData(this)'></span>
+					<input type="text" value="{{=it[i][j].nums}}" rowid="{{=it[i][j].rowid}}" id="{{=it[i][j].rowid}}" />
+					<span class="add" rowid="{{=it[i][j].rowid}}" value="{{=it[i][j].nums}}" onclick='addData(this)'></span>
+				</div>
+			</div>
+
+			{{}}}
+				</div> {{}}}
+	</script>
+
+
+
+	<div class="settle " id="pays">
+		<div class="fl">
+			<!--clicked 选中-->
+			<div class="check " id="quan1" onclick="quanxuan(this)">
+				<span></span>全选
+			</div>
+			<div class="total">
+				合计<span class="money" id="moneyTotal"></span>
+			</div>
+		</div>
+		<div onclick="tijiao()" class="btn" id="nums"> </div>
+	</div>
+	<!--删除-->
+	<div class="settle dis" id="gwc">
+		<div class="fl">
+			<!--clicked 选中-->
+			<div class=" check " id="quan2" onclick="quanxuan(this)">
+				<span></span>全选
+			</div>
+		</div>
+		<div class="btn" onclick="delRow()">删除</div>
+	</div>
+	<!--删除弹窗-->
+	<div class="toastAlert  dis" id="toastAlert">
+		<div class="content">
+			<h5>提示</h5>
+			<p>
+				确定要删除该商品吗？
+			</p>
+			<div class="btnGroup">
+				<div class="confirm" onclick="delGwc(this)" id="queRen">确认</div>
+				<div class="cancle" onclick="hideAlert()">取消</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+<script type="text/javascript">
+	apiready = function() {
+		api.addEventListener({
+		    name: 'gwc'
+		}, function(ret, err){
+		    if( ret ){
+		        //  alert( JSON.stringify( ret ) );
+						initData();
+		    }else{
+		        //  alert( JSON.stringify( err ) );
+		    }
+		});
+
+		initData();
+	}
+
+	function initData() {
+		var parame = {}
+		doAjax(listGwc, "post", parame, function(data) {
+			var data = data.data;
+			var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+			$api.html($api.byId("list"), dataTpl(data));
+			jisuanMoney();
+		})
+	}
+
+	function reduceData(el) {
+		var value = $api.attr(el, 'value');
+		var rowid = $api.attr(el, 'rowid');
+		if (value == 1) {
+			$api.removeCls(toastAlert, 'dis');
+			$api.attr(queRen, 'rowid', rowid);
+		} else {
+			value = value - 1;
+			var parame = {
+				values: {
+					rowid: rowid,
+					nums: value
+				}
+			}
+			doAjax(updateGwcNums, "post", parame, function(data) {
+				$api.val($api.byId(rowid), value);
+				var domALl = $api.domAll("span[rowid='" + rowid + "']");
+				console.log(domALl.length);
+				for (var i = 0; i < domALl.length; i++) {
+					$api.attr(domALl[i], 'value', value);
+					$api.attr(domALl[i], 'num', value);
+
+				}
+				jisuanMoney();
+			})
+		}
+
+	}
+
+	function delGwc(el) {
+		//删除 购物车内容
+		hideAlert();
+		var rowid = $api.attr(el, 'rowid') || "";
+
+		if(rowid == ""){
+			var  parame = {
+
+ 		}
+ 		doAjax(delSelectGwc,"post",parame,function(data){
+
+ 		 		 initData();
+ 		})
+			return ;
+		}
+		var parame = {
+			values: {
+				rowid: rowid
+			}
+		}
+		doAjax(delGwcNums, "post", parame, function(data) {
+			initData();
+ 		})
+	}
+
+	function addData(el) {
+		var value = $api.attr(el, 'value');
+		console.log(value);
+		var rowid = $api.attr(el, 'rowid');
+		value = parseInt(value) + 1;
+		var parame = {
+			values: {
+				rowid: rowid,
+				nums: value
+			}
+		}
+		doAjax(updateGwcNums, "post", parame, function(data) {
+			//
+			var domALl = $api.domAll("span[rowid='" + rowid + "']");
+			console.log(domALl.length);
+			for (var i = 0; i < domALl.length; i++) {
+				$api.attr(domALl[i], 'value', value);
+				$api.attr(domALl[i], 'num', value);
+			}
+			$api.val($api.byId(rowid), value);
+jisuanMoney();
+		})
+	}
+
+	function hideAlert() {
+		$api.addCls(toastAlert, 'dis');
+	}
+	function  checkData(el){
+		var rowid = $api.attr(el, 'rowid');
+		var  ischeck=  $api.attr(el, 'ischeck');
+		$api.toggleCls(el, 'clicked');
+
+		if(ischeck =="1"){
+			$api.attr(el, 'ischeck', '2');
+		}else {
+			$api.attr(el, 'ischeck', '1');
+		}
+		var parame = {
+			values: {
+				rowid: rowid,
+				ischeck: ischeck
+			}
+		}
+		doAjax(checkGwcData, "post", parame, function(data) {
+jisuanMoney();
+		})
+
+		//开始 更新
+
+	}
+	var  clickLength = "1";
+	function  editGwc(){
+		$api.attr(queRen, 'rowid', "");
+
+		if(clickLength == "1") {
+			//编辑
+			clickLength= "2";
+			$api.removeCls(gwc, 'dis');
+			$api.addCls(pays, 'dis');
+
+		}	else {
+			clickLength = "1";
+			$api.addCls(gwc, 'dis');
+			$api.removeCls(pays, 'dis');
+		}
+	}
+	function  quanxuan(el){
+			var  clicked    =  $api.hasCls(el, 'clicked');
+			$api.toggleCls(el, 'clicked');
+
+			var ischeck= "";
+			if(clicked ){
+				ischeck="1";
+			}else {
+				ischeck="2";
+			}
+			var parame= {
+				values:{
+					ischeck: ischeck
+				}
+			}
+			doAjax(checkAllGwcData,"post",parame,function(data){
+					jisuanCheckData(ischeck);
+					jisuanMoney();
+			})
+	}
+
+	function  jisuanCheckData(v){
+		var  domAll =     $api.domAll(".check");
+		for(var i = 0 ; i <  domAll.length;i++){
+			if(v == "1") {
+				$api.removeCls(domAll[i], 'clicked');
+			}else if(v=="2") {
+				$api.addCls(domAll[i], 'clicked');
+			}
+		}
+	}
+	function  jisuanMoney(){
+		var bus =   $api.domAll(".buss");
+		var   money = 0  ;
+		var  f1="1";
+		var  totalNum =  0  ;
+		for(var  i = 0 ; i <  bus.length;i++){
+			var    bussId =   $api.attr(bus[i], 'bussId');
+
+			var  domP = $api.domAll("span[bussRowid='"+bussId+"']");
+			console.log(domP.length);
+			var f  = "1";
+			for(var j = 0 ;j <  domP.length;j++){
+					var  pm=   $api.attr(domP[j], 'pm');
+
+				if(!$api.hasCls(domP[j],"clicked")){
+					f="2";
+					f1= "2";
+					// break;
+
+				}else {
+					var  num =    $api.attr(domP[j], 'num');
+					money = money +  parseFloat(pm)  *  parseInt(num);
+					totalNum =    totalNum+  parseInt(num) ;
+				}
+			}
+			console.log(f);
+			if(f == "1"){
+				$api.addCls(bus[i], 'clicked');
+			}else {
+				$api.removeCls(bus[i], 'clicked');
+			}
+
+
+		}
+		$api.html(moneyTotal, money);
+		if(totalNum >  0 ){
+		$api.html(nums, "结算(" + totalNum+")");
+	}else {
+	$api.html(nums, "结算");
+
+	}
+
+		if(f1== "1"){
+					$api.addCls(quan2, 'clicked');
+					$api.addCls(quan1, 'clicked');
+
+		}else {
+			$api.removeCls(quan2, 'clicked');
+			$api.removeCls(quan1, 'clicked');
+		}
+	}
+ function  tijiao(){
+
+	 var  parame = {
+
+	 }
+	 doAjax(submitGwcData,"post",parame,function(data){
+		 var  data=  data.data;
+		 var rowid =   data.rowid ;
+		 var parme = {
+			 rowid : rowid
+		 }
+		 openWindow("tjdd_win","../index/tjdd_win.html",parme);
+	 })
+ }
+	 function delRow(){
+		 $api.removeCls(toastAlert, 'dis');
+
+
+	 }
+
+</script>

@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common2.css" />
+</head>
+<style type="text/css">
+	html,
+	body {
+		height: 100%;
+	}
+
+	body {
+		background: #fff;
+		padding-top: 3.06rem;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.sure {
+		margin-top: 2.13rem;
+	}
+
+	.tiplogin {
+		margin-top: 0.42rem;
+	}
+	.dis {
+		display:  none !important;
+	}
+</style>
+
+<body>
+	<div class="topPlace" id="topPlace"></div>
+
+	<div class="header">
+		<span class="back" onclick="closeWin()"></span>
+	</div>
+	<h5 class="useTitle">注册
+</h5>
+	<div class="writeUl">
+		<h5>手机号</h5>
+		<input type="number" onkeyup="wordStatic(this);" class="w" placeholder="请输入手机号" id="phone"  oninput="numLength(this,11)"/>
+
+		<span class="close dis" id="close2" onclick="clear2()"></span>
+	</div>
+	<div class="writeUl">
+		<h5>验证码</h5>
+		<input type="number" class="w" placeholder="请输入验证码" id="code" oninput="numLength(this,6)" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+		<input type="button" class="sendCode" id="btn" value="获取验证码" onclick="sendcode(this)" />
+	</div>
+	<div class="writeUl">
+		<h5>密码</h5>
+		<input type="password" id="password" class="w" placeholder="请输入密码" oninput="numLength(this,16)" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"/>
+
+	</div>
+
+	<div class="sure" onclick="regiser2()">
+		完成
+	</div>
+	<div class="tiplogin">登录/注册即代表同意<em onclick="xieyi()">《用户协议》</em></div>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+
+	<script type="text/javascript">
+		var countdown = 60;
+		function sendcode(el) {
+				var phones = $api.val($api.byId("phone")) || "";
+				if (phones == "") {
+					toast("请输入手机号码");
+					return;
+				}
+				if (phones.length != 11) {
+					toast("手机号格式错误");
+					return;
+				}
+
+				if (countdown == 60) {
+
+					var parame = {
+						values: {
+							phone: phones,
+							flag : "false"
+						}
+					}
+						doAjax(sendCode,"post",parame,function(data){
+								  var flag =  data.flag;
+									if(flag=='false'){
+										toast(data.msg)
+									}else{
+										settime(el);
+									}
+						})
+				}
+			}
+		function settime(obj) {
+				if (countdown == 0) {
+					obj.removeAttribute("disabled");
+					obj.value = "获取验证码";
+					countdown = 60;
+					return;
+				} else {
+					obj.setAttribute("disabled", "disabled");
+					obj.value = "倒计时(" + countdown + ")";
+					countdown--;
+				}
+				setTimeout(function() {
+					settime(obj)
+				}, 1000)
+			}
+
+		function regiser2() {
+			var phone = $api.val($api.byId("phone")) || "";
+			var code = $api.val($api.byId("code")) || "";
+			var password = $api.val($api.byId("password")) || "";
+
+			if (phone == "") {
+				toast("请输入手机号码");
+				return;
+			}
+			if (phone.length != 11) {
+					toast("手机号格式错误");
+					return;
+				}
+			if (code == "") {
+				toast("请输入验证码");
+				return;
+			}
+			if (password == "") {
+				toast("请输入密码");
+				return;
+			}
+			if (password.length < 6 || password.length > 16) {
+				toast("请输入请输入6-16位的数字和字母组合");
+				return;
+			}
+
+			var parame = {
+				values: {
+					phone: phone,
+					regCode: code,
+					password: password
+				}
+			}
+
+			doAjax(registerApi, "POST", parame, function(data) {
+				var flag = data.flag;
+				if (flag == "false") {
+					api.alert({
+						title: '提示',
+						msg: data.msg,
+					}, function(ret, err) {
+						if (ret) {} else {}
+					});
+
+				} else {
+						toast("注册成功");
+						setTimeout(function(){
+							closeWin();
+						},300)
+				}
+			})
+		}
+
+		function xieyi() {
+			openWindow("zcxy_win", "zcxy_win.html")
+		}
+
+		function clear2() {
+			$api.val($api.byId("phone"), "")
+			$api.addCls($api.byId("close2"), 'dis');
+		}
+		function wordStatic(el) {
+ 		var input =  $api.val(el) || "";
+ 		$api.val(el,input.replace(/\D/g,''))
+ 		if(input.length > 0 )  {
+ 				$api.removeCls($api.byId("close2"), 'dis');
+ 		}else {
+ 			$api.addCls($api.byId("close2"), 'dis');
+
+ 		}
+
+ 	}
+
+	apiready =  function (){
+		// initBack();
+	}
+	function numLength(el,num){
+		var num=num;
+		var val = el.value
+		console.log(val)
+		if(val.length>num){
+			val=val.substr(0,num)
+			el.value= val
+		}
+	}
+	</script>
+
+</html>

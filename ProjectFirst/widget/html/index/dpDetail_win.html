@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+	body {
+		background: #F5F5F5;
+		/*padding-top: 3.06rem;*/
+		height: auto;
+		padding-bottom: 2.76rem;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.listShop {
+		margin-top: 0;
+	}
+
+	.listShop .middle {
+		height: 7.77rem;
+	}
+
+	.listShop .middle .goods {
+		width: 6.25rem;
+		height: 7.77rem;
+		padding-top: 0;
+	}
+</style>
+
+<body>
+	<div id="detail">
+	</div>
+
+
+	<script type="text/x-dot-template" id="data-detail">
+		<div class="goodImgShow">
+			<span onclick="closeWin()" class="circle back"></span>
+			<img src="{{=it.picurl || '../../image/default.png'}}" />
+		</div>
+		<div class="goodTitle">
+			<div class="top">
+				<h5 class="tit" oncl1ick="zhibo()">{{=it.name}}</h5>
+				<em class="i2" onclick="fenxiang()"></em>
+				<em class="i1" id="shoucang2" onclick="shoucang(this)"></em>
+				<!--<em class="i1 click"></em>-->
+			</div>
+			<div class="num">
+				<span>月销：8956</span>
+				<span>关注：1.3万</span>
+			</div>
+			<div class="wz">
+				{{=it.address || '暂无地址'}}
+			</div>
+		</div>
+	</script>
+	<!--地图插入-->
+	<div class="map">
+
+	</div>
+	<div class="listShop">
+		<div class="shopName">
+			<i></i>热销视频/直播<i></i>
+		</div>
+
+
+		<script type="text/x-dot-template" id="data-list">
+			{{for(var i in it){}}
+			<div class="goods">
+				<div class="img">
+					<img src="{{=it[i].imgsrc}}">
+				</div>
+				<div class="gn">{{=it[i].name}}</div>
+				<div class="num">
+					<span class="fl">{{=it[i].price1}}</span>
+					<span class="fr">
+								月销：8938
+							</span>
+				</div>
+			</div>
+			{{}}}
+		</script>
+
+		<div class="middle" onc1lick="product()">
+			<div class="over-auto" id="list">
+
+			</div>
+		</div>
+
+	</div>
+	<div class="listShop">
+		<div class="shopName">
+			<i></i>店铺上新<i></i>
+		</div>
+		<div class="middle" oncl2ick="product()">
+			<div class="over-auto" id="list2">
+
+			</div>
+		</div>
+
+	</div>
+	<div class="listShop">
+		<div class="shopName">
+			<i></i>热销商品<i></i>
+		</div>
+		<div class="middle">
+			<div class="over-auto" id="list3">
+
+			</div>
+		</div>
+
+	</div>
+	<div class="goodsList">
+		<ul class="searchBar">
+			<li class="cur">全部</li>
+			<li>销量</li>
+			<li>价格<span class="arrow"></span></li>
+ 			<li>筛选<i class="sx"></i></li>
+		</ul>
+		<div id="all">
+
+
+		</div>
+
+
+		<script type="text/x-dot-template" id="data-all">
+			{{for(var i in it){}}
+			<div class="item">
+				<div class="img">
+					<img src="{{=it[i].imgsrc}}">
+				</div>
+				<div class="gn">{{=it[i].name}}</div>
+				<div class="num">
+					<span class="fl">{{=it[i].price1}}</span>
+					<span class="fr">
+								月销：8938
+							</span>
+				</div>
+			</div>
+			{{}}}
+		</script>
+
+	</div>
+	<ul class="bottomFun">
+		<li onclick="ckkf()">
+			<i class="i1"></i>客服
+		</li>
+		<li onclick="alert('导航去')">
+			<i class="i2"></i>到这去
+		</li>
+	</ul>
+	<!--客服弹窗-->
+	<div class="kfAlert" style="display: none;" id="kf">
+		<ul>
+			<li onclick="zxkf()" class="li1">在线客服</li>
+			<li onclick="dhlx()">电话联系</li>
+			<li class="li3"></li>
+			<li class="li4" onclick="quxiao()">取消</li>
+		</ul>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+<script>
+	var rowid = "";
+	apiready = function() {
+		rowid = api.pageParam.rowid;
+		initData();
+		aMap = api.require("aMap");
+		aMap.open({
+			rect: {
+				x: 0,
+				y: 300,
+				w: api.winWidth,
+				h: 200
+			},
+			showUserLocation: true,
+			zoomLevel: 18,
+			center: {
+				lon: 116.4021310000,
+				lat: 39.9994480000
+			},
+			fixedOn: api.frameName,
+			fixed: false
+		}, function(ret, err) {
+			if (ret.status) {} else {}
+		});
+
+	}
+
+	function initData() {
+		var parame = {
+			values: {
+				rowid: rowid
+			}
+		}
+		doAjax(businessDetail, "POST", parame, function(data) {
+			var list = data.list;
+			var  cc2=  data.cc2 || 0
+			var data = data.data;
+			//detail
+
+			var dataTpl = doT.template(document.getElementById("data-detail").innerHTML);
+			$api.html($api.byId("detail"), dataTpl(data));
+
+			//list
+
+			var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+			$api.html($api.byId("list"), dataTpl(list));
+			$api.html($api.byId("list2"), dataTpl(list));
+			$api.html($api.byId("list3"), dataTpl(list));
+
+			//all
+
+			var dataTpl = doT.template(document.getElementById("data-all").innerHTML);
+			$api.html($api.byId("all"), dataTpl(list));
+
+			if(cc2 >   0 ){
+				$api.toggleCls(shoucang2, 'click');
+
+			}
+
+		})
+	}
+	function  shoucang(el){
+		// collectBusiness//
+
+		var parame = {
+			values:{
+				rowid : rowid
+			}
+		}
+		doAjax(collectBusiness,"post",parame,function(data){
+			$api.toggleCls(el, 'click');
+			api.sendEvent({
+			    name: 'guanzhuListener',
+			    extra: {
+			        key1: 'value1',
+			        key2: 'value2'
+			    }
+			});
+
+		})
+	}
+</script>
+
+</html>

@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+			padding-top: 3.06rem;
+			overflow-x: hidden;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+
+		.buyCar .middle {
+			height: 5.21rem;
+			padding: 0.81rem 0;
+		}
+
+		.buyCar .middle::after {
+			position: absolute;
+			content: '';
+			display: block;
+			width: 15rem;
+			height: 1px;
+			right: -0.56rem;
+			bottom: 0;
+			background: #eee;
+		}
+	</style>
+
+	<body>
+		<div class="header">
+			<span class="back"></span>
+			<span class="tt">申请退款</span>
+
+		</div>
+
+		<div class="buyCar">
+
+			<div class="middle">
+				<span class="check clicked"></span>
+				<div class="img">
+					<img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+				</div>
+				<h5>
+					爱玛超长续航200公里平均时速200/H
+				</h5>
+				<h4 class="style">2018新款 锂电池 长1.5米</h4>
+				<span class="num">x 2</span>
+
+			</div>
+			<div class="middle">
+				<span class="check clicked"></span>
+				<div class="img">
+					<img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+				</div>
+				<h5>
+					爱玛超长续航200公里平均时速200/H
+				</h5>
+				<h4 class="style">2018新款 锂电池 长1.5米</h4>
+				<span class="num">x 2</span>
+			</div>
+		</div>
+		<div class="returnGoods">
+			<h5>退款原因<span class="fr">请选择原因</span></h5>
+			<div class="textarea">
+				<textarea onkeyup="wordStatic(this);" maxlength="140" placeholder="请在此详细描述退款原因（选填）"></textarea>
+				<div class="textarea-counter"><span id="num">0</span>/140</div>
+			</div>
+			<h5 class="money">退款金额<span class="m">2160</span></h5>
+		</div>
+		<div class="fm">
+			<div class="sure" onclick="tijiao()">
+				提交
+			</div>
+		</div>
+
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/app.js"></script>
+
+	<script type="text/javascript">
+		function wordStatic(input) {
+			var content = document.getElementById('num');
+			if(content && input) {
+				var value = input.value;
+				value = value.replace(/\n|\r/gi, "");
+				content.innerText = value.length;
+			}
+		}
+    function  tijiao(){
+        openWindow("tksh_win","../my/tksh_win.html")
+    }
+	</script>

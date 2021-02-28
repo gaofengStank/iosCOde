@@ -1,0 +1,239 @@
+
+<!doctype html>
+<html style="background:#FFF">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+		.address_relative{
+			margin-top: 0.42rem;
+		}
+		.dis{
+			display: none !important;
+		}
+	</style>
+
+	<body>
+		<ul class="address_relative">
+			<li class="arrow">
+				<span class="fl">反馈类型</span>
+				<input type="text" id="lx" onclick="selectLx()" class="w" value="请选择" readonly="readonly" />
+			</li>
+			<li class="feedback">
+				<div class="textarea">
+					<textarea onkeyup="wordStatic(this);" maxlength="140" placeholder="请在此输入备注内容"></textarea>
+					<div class="textarea-counter"><span id="num">0</span>/140</div>
+				</div>
+			</li>
+		</ul>
+		<div class="upload-img">
+			<h5>请上传照片(最多6张)</h5>
+			<div class="imgArr" id="imgArr">
+
+			</div>
+		</div>
+		<div class="fb0" onclick="save()">
+					<div class="sure">提交</div>
+				</div>
+		<script type="text/x-dot-template" id="data-imgArr">
+			{{for(var i in it){}}
+		<div class="img">	<img src="{{=it[i]}}" /><em></em></div>
+		{{}}}
+		<div class="btn" onclick="upload()"></div>
+		</script>
+
+
+		<div class="kfAlert  dis"   id="kfAlert">
+			<ul id="list">
+
+			</ul>
+			<script type="text/x-dot-template" id="data-list">
+				{{for(var i in it){}}
+			<li class="li1" onclick="selData(this)" v="{{=it[i].treeNames}}">{{=it[i].treeNames}}</li>
+				{{}}}
+				<li class="li3"></li>
+				<li class="li4" onclick="selectLx()">取消</li>
+				</script>
+
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/app.js"></script>
+		<script type="text/javascript" src="../../script/doT.min.js"></script>
+		<script type="text/javascript">
+		var listData=  [];
+		var fenlei="";
+		var contents="";
+			function wordStatic(input) {
+				var content = document.getElementById('num');
+				if(content && input) {
+					var value = input.value;
+					contents=  value;
+					value = value.replace(/\n|\r/gi, "");
+					content.innerText = value.length;
+				}
+			}
+			var qiniuStorage;
+			apiready =  function(){
+					qiniuStorage=  api.require("qiniuStorage");
+getHtml();
+					qiniuStorage.addEventListener(function(data) {
+							var key = data.key;
+							var eventType = data.eventType;
+							if (eventType == "complete") {
+									api.hideProgress();
+
+ 									var    	url=  IMAGEURL + key
+
+
+										listData.push(url);
+										getHtml();
+
+							} else {
+									console.log(JSON.stringify(data));
+									var percent = parseInt(data.percent * 100);
+									api.showProgress({
+										title: '上传' + percent  +"%",
+											modal: true
+									});
+							}
+
+					});
+
+					qiniuStorage.configUploader({
+							params: {
+
+							},
+							checkCrc: false,
+							mimeType: ''
+					});
+					initData();
+			}
+			function  initData(){
+				var parame = {
+
+				}
+				doAjax(listFklx,"POST",parame,function(data){
+					var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+					$api.html($api.byId("list"), dataTpl(data.data));
+					var li1=  $api.domAll(".li1");
+					$api.removeCls(li1[li1.length-1], 'li1');
+
+				})
+			}
+
+			function  selectLx(){
+				// var array = [""]
+				$api.toggleCls(kfAlert, 'dis');
+
+			}
+			function  selData(el){
+				$api.toggleCls(kfAlert, 'dis');
+		var v =   $api.attr(el, 'v');
+					$api.val(lx, v);
+					fenlei=   v ;
+			}
+
+
+
+			function upload() {
+				api.requestPermission({
+						list: ['camera',"storage"],
+						code: 1
+				}, function(ret, err) {
+					var array = ["拍照", "选择照片"];
+					actionSheet("请选择操作", array, function(data) {
+							var index = data.buttonIndex;
+							if (index == 1) {
+									var parame = {
+											sourceType: "camera"
+									}
+									getPicture(parame, function(data) {
+											var url = data.data || "";
+											if (url != "") {
+													uploadImg(url);
+											}
+
+									});
+							}   else if (index == 2) {
+									var parame = {
+											sourceType: "album"
+									}
+									getPicture(parame, function(data) {
+											var url = data.data || "";
+											if (url != "") {
+													uploadImg(url);
+											}
+									});
+							}
+
+					})
+				});
+
+
+			}
+
+			function uploadImg(imgSrc, type) {
+					var parame = {
+							values: {
+									type: type || "jpg"
+							}
+					}
+					doAjax(getFileToken, "get", parame, function(data) {
+							var token = data.token;
+
+							uuid = data.uuid;
+							qiniuStorage.start({
+									token: token,
+									path: imgSrc,
+									key: uuid
+							});
+
+
+					}, function(data) {})
+			}
+			function  getHtml(){
+					//
+					var dataTpl = doT.template(document.getElementById("data-imgArr").innerHTML);
+					$api.html($api.byId("imgArr"), dataTpl(listData));
+			}
+			function  save(){
+				    //fenlei
+				   if(fenlei=="") {
+						 toast("请选择分类");
+						 return ;
+					 }
+			   if(contents ==""){
+					 toast("请输入内容");
+					 return ;
+				 }
+				 var parame ={
+					 values:{
+						 userid :  $api.getStorage('token'),
+						 fenlei: fenlei,
+						 contents: contents,
+						 imglist :  listData.join(",")
+					 }
+				 }
+
+				 doAjax(saveYjfk,"post",parame,function(data){
+					 closeWin();
+				 })
+
+
+			}
+		</script>
+
+</html>

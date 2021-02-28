@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+	<meta content="telephone=no" name="format-detection" />
+	<meta content="false" id="twcClient" name="twcClient">
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css">
+
+
+	<body>
+		<header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+	        <a class="aui-pull-left" onclick="closeWin()">
+	            <span class="aui-iconfont aui-icon-left"></span>
+	        </a>
+	        <div class="aui-title">
+	            <div class="aui-bar aui-bar-btn aui-bar-btn-round">
+	                <div class="aui-bar-btn-item aui-active" tapmode="" onclick="doActive(this)" data-item-order="0">店铺</div>
+	                <div class="aui-bar-btn-item" tapmode="" onclick="doActive(this)" data-item-order="1">商品</div>
+	            </div>
+	        </div>
+					<a class="aui-pull-right" onclick="search2()">
+							<span class="aui-iconfont aui-icon-search"></span>
+					</a>
+	    </header>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+	<script type="text/javascript">
+		var rowid = "";
+		var parame3 = "";
+		var pageParam;
+		apiready = function() {
+			var $header = $api.dom('header');
+			$api.fixIos7Bar($header);
+			var header_h = ($api.offset($header).h);
+			pageParam = api.pageParam;
+      var  title = pageParam.title;
+
+			api.openFrameGroup({
+					name: 'group1',
+					scrollEnabled: false,
+					rect: {
+							x: 0,
+							y:header_h,
+							w: 'auto',
+							marginBottom: 0
+					},
+					index: 0,
+					preload: 0,
+					frames: [{
+							name: 'fenlei_frm',
+							allowEdit:true,                        //（可选项）是否允许长按页面时弹出选择菜单
+							url: "fenlei_frm.html",
+							pageParam:pageParam
+					}, {
+							name: 'fenlei2_frm',
+							allowEdit:true,                        //（可选项）是否允许长按页面时弹出选择菜单
+							url: "fenlei2_frm.html",
+							pageParam: pageParam
+					} ]
+			}, function(ret, err) {
+
+			});
+
+		}
+
+		 function  doActive(el){
+				$api.removeCls($api.dom(".aui-active"), 'aui-active');
+				$api.addCls(el, 'aui-active');
+				var v =  $api.attr(el, 'data-item-order');
+				api.setFrameGroupIndex({
+				    name: 'group1',
+				    index: v,
+				    scroll: true
+				});
+
+		 }
+		 function  search2(){
+			 openWindow("search_win","search_win.html");
+		 }
+
+	</script>
+
+</html>

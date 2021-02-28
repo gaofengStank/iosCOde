@@ -1,0 +1,80 @@
+
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+			padding-top: 3.06rem;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+
+		.header .tt {
+			font-weight: normal;
+			color: #333333;
+		}
+	</style>
+
+	<body>
+		<div class="header">
+			<span onclick="close2()" class="back"></span>
+			<span class="tt">¥52.00</span>
+			<span class="icon_share"></span>
+		</div>
+		<ul class="switch_nd">
+			<li onclick="close2()">商品</li>
+			<li class="cur">详情</li>
+		</ul>
+		<div class="expalin" id="miaoshu">
+		</div>
+		<div class="floatVideo">
+			<video autoplay="true">
+				<source src="http://imgmall.tg.com.cn/kol/2020/12/22/1652/SnM363FckfRhYXYxHwdyD7SEKZxd_new.mp4" type="video/mp4"></source>
+			</video>
+
+			<span></span>
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../script/app.js"></script>
+    <script type="text/javascript" src="../../script/aui-scroll.js" ></script>
+  <script>
+			var  rowid ="";
+   		apiready   =  function(){
+				rowid =  api.pageParam.rowid  ;
+				initData();
+			}
+			function initData(){
+
+					var parame  ={
+						values:{
+							rowid : rowid
+						}
+					}
+					doAjax(productDetail,"post",parame,function(data){
+						var data   =  data.data;
+
+
+							$api.html(miaoshu, data.miaoshu);
+
+					})
+			}
+			function  close2(){
+				api.closeFrame({
+				    name: api.frameName
+
+				});
+
+			}
+  </script>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+	html,body{
+		height: 100%;
+	}
+	body {
+		background: #fff;
+		padding-top: 3.06rem;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.sure {
+		margin-top: 2.13rem;
+	}
+	.dis{
+		display:  none !important;
+	}
+</style>
+
+<body>
+	<div class="topPlace" id="topPlace"></div>
+	<div class="header">
+		<span class="back" onclick="closeWin()"></span>
+	</div>
+	<h5 class="useTitle">重置密码</h5>
+	<div class="writeUl">
+		<h5>新密码</h5>
+		<input type="password" onkeyup="wordStatic(this);" class="w" placeholder="请输入新密码" id="pw" oninput="numLength(this,16)"  />
+		<span class="close dis" id="clear" onclick="clear2('pw',this)"></span>
+	</div>
+	<div class="writeUl">
+		<h5>确认密码</h5>
+		<input type="password"  onkeyup="wordStatic2(this);" class="w" placeholder="请输入新密码" id="pw1" oninput="numLength(this,16)"  />
+		<span class="close dis" id="clear2"  onclick="clear2('pw1',this)"></span>
+	</div>
+
+	<div class="sure" style="margin-top: 1.31rem;" onclick="queren()">
+		确定
+	</div>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+	<script>
+		var phones = "";
+		apiready = function() {
+			phones = api.pageParam.phones;
+			initBack();
+		}
+
+		function clear2(e,el) {
+			$api.val($api.byId(e), '');
+			$api.addCls(el, 'dis');
+
+		}
+
+		function queren() {
+			var pw = $api.val($api.byId("pw")) || "";
+			var pw1 = $api.val($api.byId("pw1")) || "";
+
+			if (pw == "") {
+				toast("请输入密码");
+				return;
+			}
+			if (pw.length>16) {
+				toast("请输入密码");
+				return;
+			}
+			if (!CheckPassWord(pw)) {
+				toast("请输入请输入6-16位的数字和字母组合");
+				return;
+			}
+			if (pw1 == "") {
+				toast("请输入确认密码");
+				return;
+			}
+			if (pw1 != pw) {
+				toast("确认密码输入不一样");
+				return;
+			}
+			var parame = {
+				  values :{
+						phones: phones,
+						pw: pw
+					}
+			}
+
+			doAjax(checkValidCodeByPhone,"POST",parame,function(data){
+			  closeWin();
+			})
+		}
+
+		function  wordStatic2(el){
+			var input = $api.val(el) || "";
+			$api.val(el,input.replace(/[^\w\.\/]/ig,''))
+			if (input.length > 0) {
+				$api.removeCls($api.byId("clear2"), 'dis');
+			} else {
+				$api.addCls($api.byId("clear2"), 'dis');
+
+			}
+		}
+
+		function  wordStatic(el){
+			var input = $api.val(el) || "";
+			$api.val(el,input.replace(/[^\w\.\/]/ig,''))
+			if (input.length > 0) {
+				$api.removeCls($api.byId("clear"), 'dis');
+			} else {
+				$api.addCls($api.byId("clear"), 'dis');
+
+			}
+		}
+		function checkPd(el,num){
+			var num=num;
+			var val = el.value;
+			if(val.length>num){
+				val=val.substr(0,num)
+				el.value= val
+			}
+		}
+		function numLength(el,num){
+		var num=num;
+		var val = el.value
+
+		if(val.length>num){
+			val=val.substr(0,num)
+			el.value= val
+		}
+	}
+	</script>
+
+</html>

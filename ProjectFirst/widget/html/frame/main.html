@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>AUI快速完成布局</title>
+    <link rel="stylesheet" type="text/css" href="../../css/home.css" />
+</head>
+<style>
+  .header{
+    margin-top: 20px;
+  }
+</style>
+<body>
+  <script type="text/x-dot-template" id="data-list">
+      {{for(var i in it){}}
+        {{?i==0}}
+      <a na1me="1"  name="{{=it[i].name}}" onclick="doTops(this)" class="sel" hr1ef="#">{{=it[i].name}}</a>
+      {{?}}
+      {{?i!=0}}
+    <a na2me="1" onclick="doTops(this)" name="{{=it[i].name}}" cla1ss="sel" hr1ef="#">{{=it[i].name}}</a>
+    {{?}}
+
+      {{}}}
+  </script>
+    <div class="header">
+</div>
+
+
+
+              <script type="text/x-dot-template" id="data-goods">
+                  {{for(var i in it){}}
+    <li rowid="{{=it[i].rowid}}"  onclick="productDetail2(this)" title="{{=it[i].name}}">
+        <a hr1ef="#" > <img   src="{{=it[i].icon}}" class="img"><p class="bo"></p>
+            <h3>{{=it[i].name}}</h3>
+        </a>
+    </li>
+    {{}}}
+    </script>
+    <div class="menu">
+        <div id="menu" style="width: 787px;" >
+     </div>
+    </div>
+    <ul class="sy_four" id="goods" style="margin-top:190px">
+
+    </ul>
+
+
+ </body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+<script type="text/javascript">
+    var UIScrollPicture;
+    apiready = function() {
+        api.parseTapmode();
+        initData();
+        UIScrollPicture = api.require("UIScrollPicture");
+
+    }
+    function     initData(){
+      var parame ={
+
+      }
+      doAjax(homeData,"post",parame,function(data){
+        // var tabIndexConfigs  =  data.tabIndexConfigs;
+        // var tabProductTypes=   data.tabProductTypes;
+        var shopTopConfigs  =  data.shopTopConfigs;
+        // console.log(fenleis.length);
+        var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+        $api.html($api.byId("menu"), dataTpl(shopTopConfigs));
+
+        var dataTpl = doT.template(document.getElementById("data-goods").innerHTML);
+        $api.html($api.byId("goods"), dataTpl(data.shopGoodFenleis));
+        var  sider =    data.shopIndexSiders;
+        var paths=   [] ;
+        for(var i =0 ;i < sider.length;i++){
+          paths.push(sider[i].imgsrc);
+        }
+
+        UIScrollPicture.open({
+            rect: {
+                x: 0,
+                y: 80,
+                w: api.winWidth,
+                h: 180
+            },
+            data: {
+                paths: paths
+            },
+            styles: {
+                caption: {
+                    height: 35,
+                    color: '#E0FFFF',
+                    size: 13,
+                    bgColor: '#696969',
+                    position: 'bottom'
+                },
+                    indicator: {
+                        dot: {
+                            w: 4,
+                            h: 4,
+                            r: 2,
+                            margin: 8
+                        },
+                        align: 'right',
+                        color: '#f4ea2a',
+                        activeColor: '#1296db'
+                    }
+            },
+            placeholderImg: 'widget://res/slide1.jpg',
+            contentMode: 'scaleToFill',
+            interval: 3,
+            fixedOn: api.frameName,
+            loop: true,
+            fixed: false
+        }, function(ret, err) {
+            if (ret) {} else {}
+        });
+
+      })
+    }
+    function  doTops(el){
+         var name=    $api.attr(el, 'name');
+         console.log(name);
+         var parame  ={
+           name: name
+         }
+         openWindow("bbs_win","../index/bbs_win.html",parame);
+
+    }
+    function  productDetail2(el){
+         var parame = {
+           rowid  :  $api.attr(el, 'rowid'),
+           title  :  $api.attr(el, 'title')
+         }
+      openWindow("fenlei_win","../index/fenlei_win.html",parame)
+    }
+
+</script>
+
+</html>

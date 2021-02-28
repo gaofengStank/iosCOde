@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+	body {
+		background: #F5F5F5;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.goodsList .searchBar {
+		height: 1.67rem;
+	}
+
+	.goodsList .searchBar li {
+		height: 1.67rem;
+		line-height: 1.67rem;
+	}
+
+	.detail_good {
+		margin-top: 0.42rem;
+	}
+</style>
+
+<body>
+	<ul class="conRank">
+		<li class="cur">全部</li>
+		<li>距离</li>
+		<li>销量</li>
+		<li>地区</li>
+	</ul>
+
+	<div id="business">
+
+	</div>
+	<script type="text/x-dot-template" id="data-business">
+		{{for(var i in it){}}
+		<div class="listShop">
+			<div class="top">
+				<img src="{{=it[i].picurl|| '../../image/default.png'}}">
+				<h5 class="tit">{{=getHighRight(it[i].name,name)}}</h5>
+				<div class="mess">
+					<span>月销：8956</span>
+					<span>关注：1.3万</span>
+				</div>
+				<div class="btn right" onclick="jinDian(this)" rowid="{{=it[i].rowid}}">进店</div>
+				<div class="btn" onclick="daoHang(this)" rowid="{{=it[i].rowid}}">导航</div>
+			</div>
+			<div class="middle">
+				<div class="over-auto">
+					{{for(var j in it[i].shopGoods){}}
+					<div class="goods" onclick="productDetail(this)" rowid="{{=it[i].shopGoods[j].rowid}}">
+						<img src="{{=it[i].shopGoods[j].imgsrc}}">
+						<h3>{{=it[i].shopGoods[j].name.substr(0,7)}}...</h3>
+						<h5>专享价：￥<span>{{=it[i].shopGoods[j].price1}}</span></h5>
+						<h4>零售价： <span>2160</span></h4>
+					</div>
+					{{}}}
+				</div>
+			</div>
+			<div class="bottom">{{=it[i].address || '暂无地址'}} <span class="tfr">4km</span></div>
+		</div>
+		{{}}}
+	</script>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script>
+	var title = "";
+	var pageNo = 1;
+	var pageSize = 20;
+	var name = "";
+	apiready = function() {
+		title = api.pageParam.title;
+		initData();
+
+	}
+
+	function initData() {
+
+		var parame = {
+			values: {
+				fenlei: title,
+				pageNo: pageNo,
+				pageSize: pageSize,
+				name: name
+			}
+		}
+		doAjax(listBusiness, "POST", parame, function(data) {
+			console.log(JSON.stringify(data));
+			var list = data.data;
+			var dataTpl = doT.template(document.getElementById("data-business").innerHTML);
+			$api.html($api.byId("business"), dataTpl(list));
+
+
+		})
+	}
+
+	function productDetail(el) {
+		var rowid = $api.attr(el, 'rowid');
+		var parame = {
+			rowid: rowid
+		}
+		openWindow("product_win" + rowid, "product_win.html", parame);
+
+	}
+
+	function jinDian(el) {
+		var rowid = $api.attr(el, 'rowid');
+		var parame = {
+			rowid: rowid
+		}
+		openWindow("dpDetail_win" + rowid, "dpDetail_win.html", parame);
+
+	}
+
+	function searchData(v) {
+		name = v;
+		pageNo = 1;
+		pageSize = 20;
+		initData();
+
+	}
+</script>
+
+</html>

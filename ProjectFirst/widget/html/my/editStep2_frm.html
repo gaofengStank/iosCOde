@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>驹易购</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+    body {
+        background: #fff;
+     }
+
+    header {
+        border-bottom: 1px solid;
+    }
+
+    .sure {
+        margin-top: 2.13rem;
+    }
+</style>
+
+<body>
+    <div class="writeUl">
+        <h5>手机号</h5>
+        <input type="text" class="w" id="phone" placeholder="请输入手机号" />
+        <span class="close"></span>
+    </div>
+    <div class="writeUl">
+        <h5>验证码</h5>
+        <input type="text" class="w" id="code" placeholder="请输入验证码" />
+        <input type="button" class="sendCode" id="btn" value="获取验证码" onclick="settime(this)" />
+    </div>
+    <div class="sure" onclick="submit()">
+        确定
+    </div>
+
+    <script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../script/app.js"></script>
+
+    <script type="text/javascript">
+        var countdown = 60;
+
+        function settime(obj) {
+            if(countdown== 60){
+              //
+              console.log(112);
+              var parame = {
+                values:{
+                    phone:  $api.val($api.byId("phone"))
+                }
+              }
+
+              doAjax(sendCode,"post",parame,function(data){
+
+              })
+            }
+            if (countdown == 0) {
+                obj.removeAttribute("disabled");
+                obj.value = "获取验证码";
+                countdown = 60;
+                return;
+            } else {
+                obj.setAttribute("disabled", "disabled");
+                obj.value = "倒计时(" + countdown + ")";
+                countdown--;
+            }
+            setTimeout(function() {
+                settime(obj)
+            }, 1000)
+        }
+
+        function  submit(){
+          //提交
+          var  phoneV =     $api.val(phone) || "";
+          var codeV =   $api.val(code) || "";
+
+          if(phoneV == ""){
+            toast("请输入手机号!");
+            return ;
+          }
+          if(codeV == ""){
+            toast("请输入验证码!");
+            return ;
+          }
+
+          var parame   = {
+            values:{
+              phone:  phoneV,
+              code : codeV
+            }
+          }
+
+          doAjax(editPhoneData,"post",parame,function(data){
+            var  flag =   data.flag;
+            if(flag == "true") {
+              api.closeToWin({
+                  name: 'sz_win'
+              });
+
+            }else {
+              toast(data.msg);
+            }
+          })
+
+        }
+    </script>
+
+</html>

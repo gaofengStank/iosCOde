@@ -1,0 +1,96 @@
+<!doctype html>
+<html style="  background-color:#fff;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>驹易购</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+    body {
+        padding-top: 2.06rem;
+    }
+
+    .header {
+        height: 2.06rem;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <div class="searchGroup cl">
+            <form action="javascript:search();">
+                <input type="search" id="text" placeholder="搜索商品名称或店铺名称" />
+            </form>
+        </div>
+        <span class="cancel" onclick="closeWin()">取消</span>
+    </div>
+    <div class="historySearch">
+        <h5>历史搜索</h5>
+        <script type="text/x-dot-template" id="data-list">
+            {{for(var i in it){}}
+            <li onclick="doClick(this)" v="{{=it[i]}}">{{=it[i]}} </li>
+
+            {{}}}
+        </script>
+        <ul id="list">
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script>
+    apiready = function() {
+        initData();
+    }
+
+    function initData() {
+        var store = $api.getStorage('searchArray') || "";
+        var list = store.split(",");
+        //
+        var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+        $api.html($api.byId("list"), dataTpl(list));
+    }
+
+    function search() {
+        var v = $api.val(text) || "";
+
+        if (v == "") {
+            toast("请输入查询内容");
+            return;
+        }
+        // var
+        var s = $api.getStorage('searchArray') || ""
+        if (s == "") {
+            s = v;
+            $api.setStorage('searchArray', s)
+        } else {
+            var ll = s.split(",");
+            ll.push(v);
+            $api.setStorage('searchArray', ll.join(","))
+
+        }
+        api.execScript({
+            name: 'fenlei_win',
+            frameName: 'fenlei_frm',
+            script: 'searchData("' + v + '");'
+        });
+        closeWin();
+    }
+    function  doClick(el){
+      v  =   $api.attr(el, 'v');
+      api.execScript({
+          name: 'fenlei_win',
+          frameName: 'fenlei_frm',
+          script: 'searchData("' + v + '");'
+      });
+      closeWin();
+    }
+</script>
+
+</html>

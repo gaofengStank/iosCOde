@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+	<meta content="telephone=no" name="format-detection" />
+	<meta content="false" id="twcClient" name="twcClient">
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css">
+
+	<body>
+		<header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+			<a class="aui-pull-left"> <span class="aui-iconfont aui-icon-left" onclick="closeWin2()"></span> </a>
+			<div class="aui-title" id="title">
+我的订单			</div>
+
+ 		</header>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+	<script type="text/javascript">
+		var rowid = "";
+		var parame3 = "";
+		var pageParam;
+		apiready = function() {
+			var $header = $api.dom('header');
+			$api.fixIos7Bar($header);
+			var header_h = ($api.offset($header).h);
+			pageParam = api.pageParam;
+      var  title = pageParam.title;
+			api.openFrame({
+				name: 'goumaiList_frm',
+				url: 'goumaiList_frm.html',
+				rect: {
+					x: 0,
+					y: header_h,
+					w: 'auto',
+					h: api.winHeight - header_h
+				},
+				pageParam: pageParam
+			});
+			 api.addEventListener({
+			     name: 'keyback'
+			 }, function(ret, err){
+			     if( ret ){
+						 closeWin2();
+ 			     }else{
+ 			     }
+			 });
+
+		}
+	   function saveData(){
+			 api.execScript({
+			     name: api.winName,
+			     frameName: 'lxkf_frm',
+			     script: 'saveData();'
+			 });
+
+		 }
+ function closeWin2(){
+	 api.closeToWin({
+	     name: 'root'
+	 });
+
+ }
+
+
+	</script>
+
+</html>

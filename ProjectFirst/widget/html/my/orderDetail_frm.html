@@ -1,0 +1,128 @@
+
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+			height: auto;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+
+		.orderList {
+			margin: 0;
+			padding-top: 0;
+			height: 4.5rem;
+		}
+
+		.orderList .price {
+			line-height: 1;
+			margin-top: 0.8rem;
+		}
+
+		.orderList .num {
+			line-height: 1;
+			bottom: 0.95rem;
+		}
+
+		.totalMoney {
+			font-size: 0.54rem;
+		}
+
+		.totalMoney .money {
+			font-size: 0.63rem;
+		}
+
+		.totalMoney .money::before {
+			font-size: 0.48rem;
+		}
+
+		.goPay {
+			margin-top: 0.54rem;
+			height: 2.08rem;
+		}
+
+		.goPay span {
+			margin-top: 0.52rem;
+		}
+
+		.shopRelative {
+			border-bottom: none;
+		}
+
+		.orderList .price {
+			line-height: 1;
+			margin-top:0.9rem;
+			font-size: 0.54rem;
+			color: #26305C;
+		}
+		.orderList .price::before{
+			font-size: 0.46rem;
+		}
+	</style>
+
+	<body>
+
+		<div class="listTopbg" id="detail">
+
+			<h5 class="top">商家已发货，商品配送中<span class="remain cf">2018.06.19   12:11:22</span></h5>
+			<span class="set">商家已送达</span>
+			<!---->
+			<div class="address">
+				<h5>李宗旭<span>1867828563</span></h5>
+				<p>
+					地址：北京市大兴区北京市大兴区花园路紫 荆园19号楼1203
+				</p>
+			</div>
+		</div>
+		<div class="whitePlace"></div>
+		<div>
+			<div class="shopRelative">
+				雅迪电动车<span class="location">北京市大兴区</span>
+			</div>
+			<div class="orderList">
+				<img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+				<h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+				<div class="attribute">2018新款 锂电池 长1.5米
+				</div>
+				<span class="price">2160</span>
+				<span class="num">x 2</span>
+			</div>
+			<ul class="detailmoney">
+				<li>商品总额<span class="fr"><em>￥</em>2160</span></li>
+				<li>运费<span class="freight">免运费</span></li>
+			</ul>
+			<div class="totalMoney">实付款<span class="money">2160</span>
+			</div>
+
+			<ul class="listMessage">
+				<li>订单编号:<span>KE09877788</span></li>
+				<li>下单时间: <span>2018-01-14   19:56:11</span></li>
+				<li>支付方式: <span>在线支付</span></li>
+				<li>付款时间: <span>2018-05-14   19:21:22</span></li>
+			</ul>
+			<div class="goPay">
+				<span>确认收货</span><span class="bg-white">申请中</span>	<span onclick="tk()">申请退款</span>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../script/app.js"></script>
+<script>
+  function  tk(){
+    openWindow("sqtk_win","../my/sqtk_win.html")
+
+  }
+</script>
+</html>

@@ -1,0 +1,104 @@
+
+
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+		.address_relative{
+			padding: 0;
+		}
+		.address_relative li{
+			padding: 0 0.6rem;
+		}
+		.address_relative li.arrow::after{
+			right: 0.6rem;
+		}
+		.sure{
+			margin-top: 2.13rem;
+		}
+	</style>
+
+	<body>
+		<ul class="address_relative">
+			<li>
+				<span class="fl">是否接受消息</span>
+				<span class="switch " onclick="change()"></span>
+ 			</li>
+			<li class="arrow" onclick="xgmm()">
+				<span class="fl">修改密码</span>
+			</li>
+			<li class="arrow" onclick="openWindow('editPhone_win','editPhone_win.html')">
+				<span class="fl">更改手机号</span>
+			</li>
+
+			<li class="arrow" onclick="clearCache()">
+				<span class="fl">清除缓存</span>
+			</li>
+		</ul>
+		<div class="sure">
+			退出登录
+		</div>
+	<script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/app.js"></script>
+
+	<script>
+		 var  isReadMessage;
+		apiready =  function(){
+			   isReadMessage =   $api.getStorage('isReadMessage' ) || "2";
+         console.log(isReadMessage);
+			if(isReadMessage== "1"){
+				 $api.addCls($api.dom(".switch"), 'change');
+			}
+      // var cc =   api.g
+
+		}
+		function change(){
+			console.log(isReadMessage);
+				  if(isReadMessage=="1"){
+						//开启
+						isReadMessage = "2"
+						$api.setStorage('isReadMessage', '2');
+						$api.removeCls($api.dom(".switch"), 'change');
+					}else {
+						isReadMessage = "1"
+//关闭
+						$api.setStorage('isReadMessage', '1');
+						$api.addCls($api.dom(".switch"), 'change');
+					}
+		}
+		function  xgmm(){
+        openWindow("editPassword_win","editPassword_win.html");
+		}
+
+    function  clearCache(){
+      api.getCacheSize(function(ret){
+          var size = ret.size/1024.0/1024;
+          console.log(size);
+          size  =  size.toFixed(2);
+          api.clearCache(function(){
+              api.toast({
+                  msg:'已清除' + size +"MB缓存"
+              });
+          });
+
+      });
+
+    }
+
+	</script>
+</html>

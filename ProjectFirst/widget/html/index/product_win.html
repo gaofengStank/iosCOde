@@ -1,0 +1,394 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>零距离</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+	body {
+		background: #F5F5F5;
+		height: auto;
+		overflow: auto;
+		padding-bottom: 2.71rem;
+	}
+
+	.goodImgShow {
+		width: 100%;
+		height: 15rem;
+	}
+
+	.filter h5.tt {
+		font-size: 0.56rem;
+	}
+
+	.filter {
+		padding-left: 0;
+		padding-bottom: 0;
+	}
+
+	#gwcLength {
+		position: absolute;
+		left: 33%;
+		width: 14px;
+		height: 14px;
+		background-color: red;
+		text-align: center;
+		line-height: 14px;
+		border-radius: 50%;
+		display: none;
+		color: #fff;
+	}
+
+</style>
+
+<body onclic1k="hideAll()">
+	<div class="goodImgShow">
+		<span onclick="closeWin()" class="circle back"></span>
+		<img id="imgsrc1" s1rc="../../image/WechatIMG16.png" />
+		<span onclick="share()" class="circle share"></span>
+		<div class="btn">
+			<div class="fl cur">图片</div>
+			<div class="fr " onclick="ship()">视频</div>
+		</div>
+	</div>
+	<div class="gc">
+		<ul>
+			<li>
+				<span class="pt">专享价</span>
+				<span class="price" id="price1"></span>
+				<span class="fr">月销：8956</span>
+			</li>
+			<li class="del">零售价： <span id="price2"></span></li>
+			<li class="title" id="productname"></li>
+			<li class="linkRight" oncl1ick="jrgwc()">
+				<span class="fl">已选</span>
+				<span class="chose">默认规格</span>
+			</li>
+		</ul>
+	</div>
+	<div class="all_commit">
+		<h5 class="linkRight" onclick="pbpl()">
+				<span class="fl" id="totalCommit"></span>
+				<span class="fr" >查看全部评价</span>
+			</h5>
+		<div id="commits"></div>
+
+		<script type="text/x-dot-template" id="data-commits">
+			{{for(var i in it){}}
+			<div class="commit_detail">
+				<div class="top">
+					<img src="{{=it[i].imgsrc}}" /> {{=it[i].nickname}}
+				</div>
+				<div class="style">
+					默认规格
+				</div>
+				<p>
+				</p>
+				<div class="showimg">
+					{{=getImgList(it[i].imglist)}}
+				</div>
+			</div>
+			{{}}}
+
+		</script>
+	</div>
+	<div class="listShop module-shop" id="shopBusiness">
+
+	</div>
+	<!-- 商家的详细开始-->
+	<script type="text/x-dot-template" id="data-shopBusiness">
+		<div class="top">
+			<img src="{{=it.picurl ||  '../../image/default.png'}}">
+			<h5 class="tit">{{=it.name}}</h5>
+			<div class="mess">
+				<span>月销：8956</span>
+				<span>关注：1.3万</span>
+			</div>
+			<div class="btn right" onclick="jinDian(this)" rowid="{{=it.rowid}}">进店</div>
+			<div class="btn" onclick="daoHang()">导航</div>
+		</div>
+		<div class="address">{{=it.address || '暂无地址'}}</div>
+	</script>
+	<!-- 商家的详细结束-->
+
+	<div class="drapUp">上拉查看更多详情</div>
+	<div class="s-actionBar-container">
+		<!--cur:已收藏-->
+		<div class="fl clicked  " id="sc" onclick="shouc(this)">
+			<span class="i1 "></span> 收藏
+		</div>
+		<div class="fl" onclick="kefu()">
+			<span class="i2"></span> 客服
+		</div>
+		<div class="fl" onclick="gwc('../gwc/gwc.html')">
+			<span class="i3"><i style=""  id="gwcLength"></i></span> 购物车
+		</div>
+		<ul class="fr">
+			<li class="addCar" onclick="jrgwc()">加入购物车</li>
+			<li class="buy" onclick="xiadan()">立即下单</li>
+		</ul>
+	</div>
+	<!--弹窗-->
+	<div class="shareAlert" onclick="hideShare()" id="shareAlert" style="display: none;">
+		<div class="shareContent">
+			<h5 class="tit">分享到</h5>
+			<ul class="nd">
+				<li class="i1">微信好友</li>
+				<li class="i2">朋友圈</li>
+				<li class="i3">QQ</li>
+			</ul>
+		</div>
+	</div>
+	<!--评价弹窗-->
+	<div class="commitAlert" style="display:none" id="commitAlert">
+		<div class="content">
+			<span class="icon_back" onclick="hideAll()"></span>
+			<h5 class="tit">评价</h5>
+			<ul class="sort">
+				<li class="cur" id="quanbus">全部(8800)</li>
+				<li id="hp">好评(1.2万)</li>
+				<li id="zp">中评(7678)</li>
+				<li id="cp">差评(5)</li>
+			</ul>
+			<div class="all_commit" id="all_commit">
+
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+<script type="text/javascript" src="../../script/aui-scroll.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+<script type="text/javascript">
+	function hideAll() {
+		$api.attr($api.byId("commitAlert"), "style", "display:none");
+		$api.attr($api.byId("shareAlert"), "style", "display:none")
+
+	}
+
+	function kefu() {
+		openWindow("kf_win", "kf_win.html");
+	}
+
+	var rowid = "";
+	var UIPhotoViewer;
+	apiready = function() {
+		rowid = api.pageParam.rowid || "1";
+		UIPhotoViewer = api.require("UIPhotoViewer");
+		initData();
+		api.addEventListener({
+			name: 'scrolltobottom',
+			extra: {
+				threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+			}
+		}, function(ret, err) {
+			// initData();
+			console.log(33);
+			ship();
+		});
+	}
+
+	function initData() {
+		var parame = {
+			values: {
+				rowid: rowid
+			}
+		}
+		doAjax(productDetail, "post", parame, function(data) {
+			var shopBusiness = data.shopBusiness;
+			var tabOrderComments = data.tabOrderComments;
+			var cc = data.cc || 0;
+			var cc2 = data.cc2 || 0;
+			if (cc > 0) {
+				$api.addCls(sc, 'cur');
+			}
+			if(cc2 >  0){
+				$api.html(gwcLength, cc2);
+				$api.attr(gwcLength, 'style', 'display:block');
+			}
+			var dataTpl = doT.template(document.getElementById("data-commits").innerHTML);
+			$api.html($api.byId("commits"), dataTpl(tabOrderComments));
+			$api.html(totalCommit, '全部评论(' + tabOrderComments.length + ')');
+			$api.html($api.byId("all_commit"), dataTpl(tabOrderComments));
+
+			var dataTpl = doT.template(document.getElementById("data-shopBusiness").innerHTML);
+			$api.html($api.byId("shopBusiness"), dataTpl(shopBusiness));
+
+			var data = data.data;
+			var productimg = data.imgsrc;
+			var quanbus = tabOrderComments.length;
+			var hp = data.hp || 0;
+			var zp = data.zp || 0;
+			var cp = data.cp || 0;
+			$api.html($api.byId("hp"), '好评(' + hp + ')');
+			$api.html($api.byId("quanbus"), '全部(' + quanbus + ')');
+			$api.html($api.byId("zp"), '中评(' + zp + ')');
+			$api.html($api.byId("cp"), '差评(' + cp + ')');
+
+			$api.attr(imgsrc1, 'src', productimg);
+			$api.html(productname, data.name);
+			//
+			//
+			$api.html(price1, data.price1);
+			//
+			//
+			// 	$api.html(price2, data.price2);
+
+
+
+		})
+	}
+
+	function ship() {
+
+		console.log(212);
+		api.openFrame({
+			name: 'product_frm',
+			url: 'product_frm.html',
+			rect: {
+				x: 0,
+				y: 35,
+				w: api.winWidth,
+				h: api.winHeight
+			},
+			pageParam: {
+				rowid: rowid
+			},
+			bounces: true,
+			bgColor: 'rgba(0,0,0,0)',
+			vScrollBarEnabled: true,
+			hScrollBarEnabled: true
+		});
+	}
+
+	function getImgList(v) {
+		var html = "";
+		var list = v.split(",");
+		for (var i = 0; i < list.length; i++) {
+			html = html + "<img index='" + i + "' onclick='showBigImgs(this)' allImgs='" + v + "' src='" + list[i] + "'/>"
+		}
+		return html;
+	}
+
+	function share() {
+		$api.attr($api.byId("shareAlert"), "style", "")
+	}
+
+	function hideShare() {
+		$api.attr($api.byId("shareAlert"), "style", "display:none")
+	}
+
+	function pbpl() {
+		$api.attr($api.byId("commitAlert"), "style", "")
+
+	}
+
+	function showBigImgs(el) {
+		var index = $api.attr(el, 'index');
+		var allImgs = $api.attr(el, 'allImgs');
+		var list = allImgs.split(",");
+		UIPhotoViewer.open({
+			images: list,
+			placeholderImg: 'widget://res/img/apicloud.png',
+			bgColor: '#000',
+			gestureClose: true,
+			activeIndex: index
+		}, function(ret, err) {
+			if (ret) {
+				// alert(JSON.stringify(ret));
+			} else {
+				// alert(JSON.stringify(err));
+			}
+		});
+	}
+
+	function jinDian(el) {
+		// var
+		var rowid1 = $api.attr(el, 'rowid');
+
+		var parame = {
+			rowid: rowid1
+		}
+		openWindow("dpDetail_win" + rowid, "dpDetail_win.html", parame);
+
+	}
+
+	function shouc() {
+		checkLogin(function() {
+			var parame = {
+				values: {
+					rowid: rowid
+				}
+			}
+			doAjax(collectProduct, "post", parame, function(data) {
+				$api.toggleCls(sc, 'cur');
+			})
+		}, function() {
+			openWindow("login", "../login/pwLogin.html");
+		})
+	}
+
+	function jrgwc() {
+			checkLogin(function(){
+				var parame = {
+					values: {
+						rowid: rowid
+					}
+				}
+
+				doAjax(addGwc,"post",parame,function(data){
+							var  count  =  data.count;
+							if(count >  0){
+								$api.html(gwcLength, count);
+								$api.attr(gwcLength, 'style', 'display:block');
+							}
+							api.sendEvent({
+							    name: 'gwc',
+							    extra: {
+							        key1: 'value1',
+							        key2: 'value2'
+							    }
+							});
+
+				})
+			},function(){
+				openWindow("login", "../login/pwLogin.html");
+			})
+
+	}
+	function  xiadan(){
+		//提交订单
+		checkLogin(function(){
+			var parame = {
+				values: {
+					rowid: rowid
+				}
+			}
+
+			doAjax(submitOrder,"post",parame,function(data){
+					 	var  data=  data.data;
+						var rowid =   data.rowid ;
+						var parme = {
+							rowid : rowid
+						}
+						openWindow("tjdd_win","tjdd_win.html",parme);
+			})
+		},function(){
+			openWindow("login", "../login/pwLogin.html");
+		})
+	}
+	function gwc(){
+		openWindow("gwc_win","gwc_win.html");
+	}
+</script>
+
+</html>

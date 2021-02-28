@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		html,body{
+			height: 100%;
+		}
+		body {
+			background: #fff;
+			padding-top: 3.06rem;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+
+		.sure {
+			margin-top: 2.13rem;
+		}
+		.dis{
+			display: none !important;
+		}
+
+	</style>
+
+	<body>
+		<div class="topPlace" id="topPlace"></div>
+		<div class="header">
+			<span class="back" onclick="closeWin()"></span>
+		</div>
+		<h5 class="useTitle">验证手机</h5>
+		<div class="writeUl">
+			<h5>手机号</h5>
+			<input type="number" onkeyup="wordStatic(this);" class="w" placeholder="请输入手机号" id="phones" oninput="numLength(this,11)"/>
+			<span class="close dis"  id="close2" onclick="clear2()"></span>
+		</div>
+		<div class="writeUl">
+			<h5>验证码</h5>
+			<input type="number" class="w" placeholder="请输入验证码"   id="code" onkeyup="this.value=this.value.replace(/\D/g,'')"  oninput="numLength(this,6)" />
+			<input type="button" class="sendCode" id="btn" value="获取验证码" onclick="sendcode(this)" />
+		</div>
+
+		<div  onclick="yamLogin()" class="sure" style="margin-top: 2.08rem;">
+			确定
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/app.js"></script>
+
+		<script>
+			apiready = function() {
+				initBack();
+			}
+			var countdown = 60;
+
+			function sendcode(el) {
+				var phones = $api.val($api.byId("phones")) || "";
+				if (phones == "") {
+					toast("请输入手机号码");
+					return;
+				}
+				if (phones.length != 11) {
+					toast("手机号格式错误");
+					return;
+				}
+
+				if (countdown == 60) {
+					var parame = {
+						values: {
+							phone: phones,
+							flag : "true"
+						}
+					}
+						doAjax(sendCode,"post",parame,function(data){
+								  var flag =  data.flag;
+									if(flag=='false'){
+										toast(data.msg)
+									}else{
+										settime(el);
+									}
+						})
+				}
+			}
+
+			function settime(obj) {
+				if (countdown == 0) {
+					obj.removeAttribute("disabled");
+					obj.value = "获取验证码";
+					countdown = 60;
+					return;
+				} else {
+					obj.setAttribute("disabled", "disabled");
+					obj.value = "倒计时(" + countdown + ")";
+					countdown--;
+				}
+				setTimeout(function() {
+					settime(obj)
+				}, 1000)
+			}
+					function  register(){
+						openWindow("register_win","register_win.html",{})
+					}
+
+					function   yamLogin(){
+						var phones = $api.val($api.byId("phones")) || "";
+						if (phones == "") {
+							toast("请输入手机号码");
+							return;
+						}
+
+
+						var code = $api.val($api.byId("code")) || "";
+						if (code == "") {
+							toast("请输入验证码");
+							return;
+						}
+
+
+							var parame  = {
+						    values :  {
+									phones : phones  ,
+									code: code
+								}
+							}
+							doAjax(checkValidCode,"POST",parame,function(data){
+											var flag = data.flag;
+											if (flag == "false") {
+													toast(data.msg)
+											} else {
+												var parame =  {
+													phones :  phones
+												}
+														openWindow("resetPw","resetPw2.html",parame)
+												}
+							})
+					}
+					function wordStatic(el) {
+					var input =  $api.val(el) || "";
+					$api.val(el,input.replace(/\D/g,''))
+					if(input.length > 0 )  {
+							$api.removeCls($api.byId("close2"), 'dis');
+					}else {
+						$api.addCls($api.byId("close2"), 'dis');
+
+					}
+
+				 }
+				 function  clear2(){
+					 $api.val($api.byId("phones"), '');
+					 $api.addCls($api.byId("close2"), 'dis');
+				 }
+				 function numLength(el,num){
+		var num=num;
+		var val = el.value
+		if(val.length>num){
+			val=val.substr(0,num)
+			el.value= val
+		}
+	}
+		</script>
+
+</html>

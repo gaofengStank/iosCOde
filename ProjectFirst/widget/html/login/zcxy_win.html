@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+			padding-top: 3.06rem;
+		}
+		header {
+			border-bottom: 1px solid;
+		}
+	</style>
+
+	<body>
+		<div class="topPlace"  id="topPlace"></div>
+		<div class="header">
+			<span class="back" onclick="closeWin()"></span>
+			<span class="tt">注册协议</span>
+		</div>
+		<div class="article" id="content">
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/app.js"></script>
+		<script>
+
+			 apiready =  function(){
+					initBack();
+					initData();
+			 }
+			 function  initData(){
+          doAjax(zcxy,"POST",{},function(data){
+	  var  content = data.listAbout.zcxy;
+		$api.html($api.byId("content"), content);
+
+					})
+			 }
+			 </script>
+</html>

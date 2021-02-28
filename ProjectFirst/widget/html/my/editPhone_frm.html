@@ -1,0 +1,105 @@
+
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>驹易购</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #fff;
+ 		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+		.sure{
+			margin-top: 2.13rem;
+		}
+	</style>
+
+	<body>
+		<p class="pTip">为保证账户安全修改手机号需验证原手机号<span id="phone1"></span></p>
+		<div class="w_code">
+			<input type="tel" maxlength="4"  id="phone2"  onkeyup ="change22()"/>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+		<span class="settime" id="dates">倒计时60s</span>
+		<div class="sure" onclick="save()">
+			下一步
+		</div>
+
+	<script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/app.js"></script>
+  <script>
+
+     function  change22(){
+        var ll =  $api.val(phone2).length ;
+         console.log(ll);
+         if(ll ==4) {
+           $api.byId("phone2").blur();
+         }
+     }
+     apiready =  function(){
+       initData();
+				sendCodeData();
+     }
+     function initData(){
+
+  			 var parame = {}
+  			 doAjax(getUserInfo,"post",parame,function(data){
+  				 var  data=  data.data;
+  					$api.html(phone1, data.username);
+  			 })
+     }
+			 function sendCodeData(){
+				 var parame = {}
+				 doAjax(sendPhoneCode,"post",parame,function(data){
+					 setInterval(function(){
+						 jisuan()
+					 },1000)
+				 })
+			 }
+			 var  time =    60  ;
+			 function  jisuan(){
+					if(time >0) {
+						$api.html(dates, '倒计时'+time+'s');
+					}else {
+						$api.html(dates, '');
+					}
+			 }
+
+			 function  save(){
+				 //checkPhoneCode
+				 var phone2=     $api.val($api.byId("phone2")) || "";
+
+				 if(phone2 == "") {
+					 toast("请输入验证码!");
+					 return ;
+				 }
+
+				 var parame = {
+					 values:{
+						 code:  phone2
+					 }
+				 }
+				 doAjax(checkPhoneCode,"post",parame,function(data){
+					 var  flag=   data.flag;
+					 if(flag=="true"){
+						 openWindow("editStep2_win","editStep2_win.html")
+					 }else {
+						 toast("验证码错误!");
+					 }
+				 })
+			 }
+
+  </script>
+</html>

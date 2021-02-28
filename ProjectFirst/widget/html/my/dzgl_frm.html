@@ -1,0 +1,125 @@
+
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+	</style>
+
+	<body>
+		<div id="list">
+		</div>
+		<script type="text/x-dot-template" id="data-list">
+			{{for(var i in it){}}
+			<div class="addressDetail">
+				<div class="top">
+					{{=it[i].names}}<span class="phone">{{=it[i].phone}}</span>
+				</div>
+				<p>
+					{{=it[i].address}} {{=it[i].details}}
+				</p>
+				<div class="bottom">
+					{{?it[i].isdefau=="2"}}
+					<span rowid="{{=it[i].id}}" onclick="set(this)" class="local  clicked">设为默认</span>
+					{{?}}
+					{{?it[i].isdefau!="2"}}
+					<span  rowid="{{=it[i].id}}"  onclick="set(this)" class="local ">设为默认</span>
+					{{?}}
+					<span class="delete" rowid="{{=it[i].id}}"  onclick="delRow(this)">删除</span>
+					<span class="editor" rowid="{{=it[i].id}}" onclick="editRow(this)" >编辑</span>
+				</div>
+			</div>
+			{{}}}
+		</script>
+
+
+		<div class="fb0" onclick="addAddress()" style="background-color:#F5F5F5">
+			<div class="sure">添加地址</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/app.js"></script>
+	<script type="text/javascript" src="../../script/doT.min.js"></script>
+
+<script>
+  //  function  addDz(){
+  //    openWindow("addDz_win","addDz_win.html");
+  //  }
+
+			apiready =  function(){
+					initData();
+			}
+			function initData(){
+
+					//
+					var parame = {}
+					doAjax(listMyAddress, "post", parame, function(data) {
+						// if()
+						var data = data.data;
+
+ 						 var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+ 						 $api.html($api.byId("list"), dataTpl(data));
+					})
+			}
+			function set(el){
+				var rowid  =$api.attr(el,"rowid");
+				//setDefalutAddress
+				var parame = {
+					values:{
+						rowid : rowid
+					}
+				}
+				doAjax(setDefalutAddress,"post",parame,function(data){
+					initData();
+				})
+			}
+			function  delRow(el){
+				var rowid  =$api.attr(el,"rowid");
+			  api.confirm({
+			      title: '提示',
+			      msg: '确定删除该地址吗?',
+			      buttons: ['确定', '取消']
+			  }, function(ret, err){
+			      if( ret.buttonIndex  == 1 ){
+							var parame = {
+								values:{
+									rowid : rowid
+								}
+							}
+							doAjax(delMyAddressDetail,"post",parame,function(data){
+								initData();
+							})
+			      }else{
+			      }
+			  });
+
+			}
+
+			function  addAddress(){
+				openWindow("addressAdd_win","addressAdd_win.html")
+			}
+			function editRow(el){
+				var rowid  =$api.attr(el,"rowid");
+					var parame = {
+						rowid : rowid
+					}
+					openWindow("addressAdd_win","addressAdd_win.html",parame)
+
+			}
+</script>
+</html>

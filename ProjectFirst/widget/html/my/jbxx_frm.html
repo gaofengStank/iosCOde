@@ -1,0 +1,220 @@
+
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>零距离</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	</head>
+	<style type="text/css">
+		body {
+			background: #F5F5F5;
+		}
+
+		header {
+			border-bottom: 1px solid;
+		}
+		.dis{
+			display: none !important;
+		}
+	</style>
+
+	<body>
+		<ul class="person_message">
+			<li class="avatar">
+				头像<img src="../../image/avatar_default.png" id="imgsrc" />
+			</li>
+			<li>昵称<span onclick="editName()" class="fr" id="nickname1"></span></li>
+			<li>电话<span class="fr" id="phone1"></span></li>
+
+			<li>性别<span onclick="editSex()" class="fr" id="sex1"></span></li>
+			<li>所在地区<input  onclick="openAdd()" id="area" type="text" placeholder="请选择地区" readonly="readonly" /></li>
+		</ul>
+		<!--修改名称弹窗-->
+		<div class="nameAlert dis" style="" id="nameAlert">
+			<div class="content">
+				<h5>修改昵称</h5>
+				<input type="text" placeholder="请输入昵称" id="name"/>
+				<ul>
+					<li class="cancle"  onclick="editName()">取消</li>
+					<li class="save"   onclick="saveData()">保存</li>
+				</ul>
+			</div>
+
+		</div>
+		<!--头像-->
+		<div class="kfAlert dis" sty1le="display: none;">
+			<ul>
+				<li class="li1">拍照</li>
+				<li>相册</li>
+				<li class="li3"></li>
+				<li class="li4">取消</li>
+			</ul>
+		</div>
+
+		<div class="kfAlert dis" style="" id="sexAlter">
+			<ul>
+				<li onclick="selectSex(this)" value="1" class="li1">男</li>
+				<li onclick="selectSex(this)" value="2">女</li>
+				<li class="li3"></li>
+				<li class="li4" onclick="editSex()">取消</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+			<script>
+			var UIActionSelector;
+			  apiready =  function(){
+					initData();
+					UIActionSelector=  api.require("UIActionSelector");
+ 					}
+
+				function  openAdd(){
+					UIActionSelector.open({
+							datas: 'widget://res/city.json',
+							layout: {
+									row: 5,
+									col: 3,
+									height: 30,
+									size: 12,
+									sizeActive: 14,
+									rowSpacing: 5,
+									colSpacing: 10,
+									maskBg: 'rgba(0,0,0,0.2)',
+									bg: '#fff',
+									color: '#888',
+									colorActive: '#f00',
+									colorSelected: '#f00'
+							},
+							animation: true,
+							cancel: {
+									text: '取消',
+									size: 14,
+									w: 90,
+									h: 35,
+									bg: 'none',
+
+									bgActive: '#ccc',
+									color: '#888',
+									colorActive: '#fff'
+							},
+							ok: {
+									text: '确定',
+									size: 14,
+									w: 90,
+									h: 35,
+									bg: 'none',
+									bgActive: '#ccc',
+									color: '#005bea',
+									colorActive: '#fff'
+							},
+							title: {
+									text: '请选择',
+									size: 12,
+									h: 44,
+									bg: '#eee',
+									color: '#888'
+							},
+							fixedOn: api.frameName
+					}, function(ret, err) {
+							if (ret) {
+									// alert(JSON.stringify(ret));
+									console.log(JSON.stringify(ret));
+									if (ret.eventType == "ok") {
+											  var  text   =  "";
+											if (ret.level2 == "市辖区" || ret.level2 == "县") {
+												provice =  ret.level1;
+													city  = ret.level2
+													area="";
+													$api.byId("area").value = ret.level1 + " " + ret.level3;
+													text=  $api.byId("area").value;
+											} else {
+												provice =  ret.level1;
+													city  = ret.level2;
+													area=ret.level3;
+													$api.byId("area").value = ret.level1 + " " + ret.level2 + " " + ret.level3;
+													text=  $api.byId("area").value;
+											}
+
+											var parame = {
+												values:{
+													baseCity :  text
+												}
+											}
+
+											doAjax(saveInfoData,"POST",parame,function(data){
+											})
+
+
+									}
+
+							} else {
+									// alert(JSON.stringify(err));
+							}
+					});
+				}
+				function  initData(){
+
+		 			 var parame = {}
+		 			 doAjax(getUserInfo,"post",parame,function(data){
+		 				 var  data=  data.data;
+		 					$api.html(nickname1, data.nickname);
+		 					$api.html(phone1, data.username);
+		 					$api.attr(imgsrc, "src",data.userpic || "../../image/avatar_default.png");
+							$api.html(sex1, convertSex(data.sex));
+$api.byId("area").value  =   data.basecity || "暂无地址";
+		 			 })
+				}
+
+				function  editName(){
+						  $api.toggleCls(nameAlert, 'dis');
+				}
+				function  saveData(){
+					var    nameV    =   $api.val($api.byId("name")) || "";
+					if(nameV == ""){
+						toast("请输入昵称!");
+						return  ;
+					}
+					editName();
+				  var parame = {
+						values:{
+							name :  nameV
+						}
+					}
+
+					doAjax(saveInfoData,"POST",parame,function(data){
+						$api.html(nickname1, nameV);
+						api.execScript({
+						    name: 'root',
+						    frameName: 'my',
+						    script: 'initData();'
+						});
+
+					})
+				}
+				function editSex(){
+
+					$api.toggleCls(sexAlter, 'dis');
+				}
+
+				function  selectSex(el){
+					var  v =   $api.attr(el, 'value');
+					var parame = {
+						values:{
+							sex:  v
+						}
+					}
+					doAjax(saveInfoData,"POST",parame,function(data){
+						$api.html(sex1, convertSex(v));
+						editSex();
+					})
+
+				}
+			</script>
+</html>

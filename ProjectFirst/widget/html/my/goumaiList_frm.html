@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>零距离</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+<style type="text/css">
+    body {
+        background: #F5F5F5;
+    }
+
+    header {
+        border-bottom: 1px solid;
+    }
+
+    .orderList {
+        margin: 0;
+        padding-top: 0;
+        height: 4.5rem;
+    }
+
+    .orderList .price {
+        line-height: 1;
+        margin-top: 0.8rem;
+    }
+
+    .orderList .num {
+        line-height: 1;
+        bottom: 0.95rem;
+    }
+
+    .shopRelative {
+        border-bottom: none;
+    }
+</style>
+
+<body>
+    <ul class="nav">
+        <li index="0" class="cur">待付款</li>
+        <li index=1>待发货</li>
+        <li index=2>待收货</li>
+        <li index=3>待评价</li>
+        <li index=4>已完成</li>
+    </ul>
+    <div  onc1lick="detail()">
+        <div class="shopRelative">
+            雅迪电动车<span class="location">北京市大兴区</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="totalMoney">共1件商品 &nbsp;需付款<span class="money">2160</span>
+        </div>
+        <div class="goPay" oncl1i1ck="location.href='../home/tjdd.html'">
+            <span>去付款</span>
+        </div>
+    </div>
+    <!---->
+    <div>
+        <div class="shopRelative">
+            雅迪电动车<span class="location">北京市大兴区</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="totalMoney">共1件商品 &nbsp;需付款<span class="money">2160</span>
+        </div>
+        <div class="goPay" onc1l1ick="location.href='../home/tjdd.html'">
+            <span>去付款</span>
+        </div>
+    </div>
+    <div onc1lick="location.href='../my/fhxq.html'">
+        <div class="shopRelative">
+            雅迪电动车<span class="location">北京市大兴区</span>
+        </div>
+        <div class="logisticsLast">
+            <h5>商家已收到您的订单，正在准备中</h5>
+            <span class="time">2018.06.19 12:11:22</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="totalMoney">共1件商品 &nbsp;需付款<span class="money">2160</span>
+        </div>
+        <div class="goPay">
+            <span>提醒发货</span>
+        </div>
+    </div>
+    <!---->
+    <div onc1lick="location.href='../my/fhxq.html'">
+        <div class="shopRelative">
+            雅迪电动车<span class="location">北京市大兴区</span>
+        </div>
+        <div class="logisticsLast">
+            <h5>商家已收到您的订单，正在准备中</h5>
+            <span class="time">2018.06.19 12:11:22</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg" />
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="totalMoney">共1件商品 &nbsp;需付款<span class="money">2160</span>
+        </div>
+        <div class="goPay">
+            <span class="bg-white">已提醒</span>
+        </div>
+    </div>
+    <div on1click="location.href='../my/ddxq.html'">
+        <div class="shopRelative">
+            雅迪电动车<span class="location">北京市大兴区</span>
+        </div>
+        <div class="logisticsLast">
+            <h5>商家已发货，商品配送中</h5>
+            <span class="time">2018.06.19 12:11:22</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg">
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="totalMoney">共1件商品 &nbsp;需付款<span class="money">2160</span>
+        </div>
+        <div class="goPay">
+            <span>确认收货</span>
+        </div>
+    </div>
+
+    <div onc1lick="location.href='../my/pjxq.html'">
+        <div class="shopRelative">
+            雅迪电动车<span class="location">北京市大兴区</span>
+        </div>
+        <div class="logisticsLast">
+            <h5>买家已确认收货</h5>
+            <span class="time">2018.06.19 12:11:22</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg">
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="totalMoney">共1件商品 &nbsp;实付款<span class="money">2160</span>
+        </div>
+        <div class="goPay">
+            <span>去评价</span>
+        </div>
+    </div>
+    <div>
+        <div class="shopRelative">
+            雅迪电动车<span class="location">北京市大兴区</span>
+        </div>
+        <div class="logisticsLast">
+            <h5>买家已确认收货</h5>
+            <span class="time">2018.06.19 12:11:22</span>
+            <span class="status">交易完成</span>
+        </div>
+        <div class="orderList">
+            <img src="https://img95.699pic.com/photo/50050/5027.jpg_wh860.jpg">
+            <h5>爱玛超长续航的200公里平均时速200/H
+</h5>
+            <div class="attribute">2018新款 锂电池 长1.5米
+            </div>
+            <span class="price">2160</span>
+            <span class="num">x 2</span>
+        </div>
+        <div class="totalMoney">共1件商品 &nbsp;实付款<span class="money">2160</span>
+        </div>
+        <div class="goPay" onc1lick="location.href='../my/wdpj.html'">
+            <span>查看评价</span>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../script/app.js"></script>
+
+    <script>
+        apiready = function() {
+            status = api.pageParam.index || "0";
+            if (status != "0") {
+                $api.removeCls($api.dom(".cur"), 'cur');
+                $api.addCls($api.dom("li[index='" + status + "']"), 'cur');
+            }
+        }
+        function  detail(){
+           openWindow("orderDetail_win","../my/orderDetail_win.html")
+        }
+    </script>
+
+</html>

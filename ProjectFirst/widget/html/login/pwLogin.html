@@ -1,0 +1,98 @@
+<!doctype html>
+<html style="background:#fff">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>驹易购</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common2.css" />
+</head>
+<style type="text/css">
+	body {
+		background: #fff;
+		padding-top: 3.06rem;
+	}
+
+	header {
+		border-bottom: 1px solid;
+	}
+
+	.sure {
+		margin-top: 2.13rem;
+	}
+</style>
+
+<body>
+	<div class="header" onclick="closeWin()">
+		<span class="back"></span>
+	</div>
+	<h5 class="useTitle">密码登录<span onclick="openWindow('yzmLogin','yzmLogin.html')">验证码登录
+</span></h5>
+	<div class="writeUl">
+		<h5>手机号</h5>
+		<input type="tel" id="phone" class="w" placeholder="请输入手机号" />
+	</div>
+	<div class="writeUl">
+		<h5>密码</h5>
+		<input type="password" id="password" class="w" placeholder="请输入密码" />
+	</div>
+	<div class="wtip">登录遇到问题？</div>
+	<div class="sure" style="margin-top: 1.31rem;" onclick="login()">
+		登录
+	</div>
+	<div class="tiplogin">还没账号？<em onclick="zhuce()">现在注册</em></div>
+	<div class="loginWay">
+		<div class="wx">微信</div>
+		<div class="qq">QQ</div>
+		<div class="yk" onclick="closeWin()">游客</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/app.js"></script>
+
+<script>
+	function zhuce() {
+		openWindow("register_win", "register_win.html");
+	}
+
+	function login() {
+		//loginPost
+		var phone = $api.val($api.byId("phone")) || "";
+		var password = $api.val($api.byId("password")) || "";
+
+		if (phone == "") {
+			toast("请输入账号");
+			return;
+		}
+		if (password == "") {
+			toast("请输入密码");
+			return;
+		}
+
+		var parame = {
+			values: {
+				phone: phone,
+				password: password
+			}
+		}
+
+		doAjax(loginPost,"post",parame,function(data){
+			var flag =   data.flag;
+			if(flag =="true"){
+					var  data =  data.data;
+					var token =  data.uid;
+					$api.setStorage('token', token);
+					closeWin();
+			}else {
+				toast(data.msg);
+			}
+		})
+
+
+	}
+</script>
+
+</html>

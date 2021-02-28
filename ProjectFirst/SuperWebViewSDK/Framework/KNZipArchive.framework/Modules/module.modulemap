@@ -1,0 +1,6 @@
+framework module KNZipArchive {
+  umbrella header "KNZipArchive.h"
+
+  export *
+  module * { export * }
+}
